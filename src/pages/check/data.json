@@ -1,0 +1,30 @@
+{
+    "weatherData": [
+      {
+        "value": "Kathmandu",
+       
+        "temperature": "28°C",
+        "description": "Partly Cloudy",
+        "humidity": "63%"
+      },
+      {
+        "place": "Pokhara",
+        "temperature": "26°C",
+        "description": "Sunny",
+        "humidity": "58%"
+      },
+      {
+        "place": "Udayapur",
+        "temperature": "30°C",
+        "description": "Clear Sky",
+        "humidity": "70%"
+      },
+      {
+        "place": "Butwal",
+        "temperature": "29°C",
+        "description": "Scattered Clouds",
+        "humidity": "67%"
+      }
+    ]
+  }
+  
