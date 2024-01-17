@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link,  useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import ProductDetail from "./ProductDetail";
 
@@ -11,12 +11,12 @@ function Product() {
   useEffect(() => {
     // Fetch product data from your fake API here
     // Replace 'YOUR_API_URL_HERE' with the actual API URL
-    fetch("http://127.0.0.1:8000/products/")
+    fetch("https://fakestoreapi.com/products")
       .then((response) => response.json())
       .then((data) => setProducts(data))
       .catch((error) => console.error("Error fetching data:", error));
   }, []);
- console.log(fetch)
+  console.log(fetch);
   const chunkArray = (arr, chunkSize) => {
     const chunkedArray = [];
     for (let i = 0; i < arr.length; i += chunkSize) {
@@ -44,13 +44,11 @@ function Product() {
                     alt={product.title}
                     className="w-full h-40 object-cover rounded-md"
                   />
-                  <h2 className="text-lg font-semibold mt-2">
-                    {product.name}
-                  </h2>
+                  <h2 className="text-lg font-semibold mt-2">{product.name}</h2>
                 </Link>
                 <p className="text-gray-600">{product.category.product_name}</p>
                 <p className="text-lg font-semibold text-green-500 mt-2">
-                रू {product.price}
+                  रू {product.price}
                 </p>
               </div>
             ))}

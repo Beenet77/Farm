@@ -1,4 +1,9 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Route,
+  Routes,
+} from "react-router-dom";
 import Login from "./pages/login/Login";
 import Register from "./pages/register/Register";
 import Blog from "./pages/blogs/Blog";
@@ -11,6 +16,7 @@ import ProductDetail from "./pages/home/ProductDetail";
 import NoticeBoard from "./pages/noticeboard/NoticeBoard";
 import Notice from "./components/Notice";
 import Check from "./pages/check/Check";
+import ProtectedRoute from "./components/ProtectedRoute";
 function App() {
   const router = createBrowserRouter([
     {
@@ -19,49 +25,68 @@ function App() {
     },
     {
       path: "/register",
-      element: <Register />
+      element: <Register />,
     },
     {
-      path:"/blogs",
-      element: <Blog />
+      path: "/blogs",
+      element: <Blog />,
     },
     {
-      path:"/blogs/:id",
-      element:<Blogpost/>
+      path: "/blogs/:id",
+      element: <Blogpost />,
     },
     {
-      path:"/weather",
-      element:<Check/>
+      path: "/weather",
+      element: <Check />,
     },
     {
-      path:"/feedback",
-      element:<Feedback/>
+      path: "/feedback",
+      element: <Feedback />,
     },
     {
-      path:"/home",
-      element:<Home/>
+      path: "/home",
+      element: <Home />,
     },
     {
-      path:"/products/:productId",
-      element:<ProductDetail/>
+      path: "/products/:productId",
+      element: <ProductDetail />,
     },
     {
-      path:"/expert",
-      element:<Mentors/>
+      path: "/expert",
+      element: <Mentors />,
     },
     {
-      path:"/noticeboard",
-      element:<NoticeBoard/>
+      path: "/noticeboard",
+      element: <NoticeBoard />,
     },
     {
-      path:"/notice",
-      element:<Notice/>
-    }
+      path: "/notice",
+      element: <Notice />,
+    },
+    {
+      path: "/weather",
+      element: <Weather />,
+    },
   ]);
+
   return (
     <div className="App">
       <header className="App-header">
-        <RouterProvider router={router} />
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/home" element={<Home />} />
+            <Route path="/weather" element={<Check />} />
+            <Route path="/feedback" element={<Feedback />} />
+            <Route path="/blogs" element={<Blog />} />
+            <Route path="/noticeboard" element={<NoticeBoard />} />
+            <Route path="/notice" element={<Notice />} />
+            <Route path="/products/:productId" element={<ProductDetail />} />
+            <Route path="/blogs/:id" element={<Blogpost />} />
+          </Route>
+        </Routes>
+        {/* <RouterProvider router={router} /> */}
       </header>
     </div>
   );
