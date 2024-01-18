@@ -140,13 +140,56 @@
 // };
 
 // export default Login;
-import { React } from "react";
+import { React, useState } from "react";
 import { Link } from "react-router-dom";
 // import Logo from "../images/logo.png";
 import ButtonPrimary from "../../components/ButtonPrimary";
+import { useGlobalUserAuth } from "../../context/userAuthContext";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 // import BackgroundImage from "";
 
 const Login = () => {
+  const navigate = useNavigate();
+  const [loginCrendital, setLoginCrendital] = useState({
+    email: "",
+    password: "",
+  });
+  const { setLoginUser } = useGlobalUserAuth();
+  const handelSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      // const result = await fetch("https://kt.esewi.com/accounts/login/", {
+      //   mode: "no-cors",
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify(loginCrendital),
+      // });
+      const result = await axios.post(
+        "https://kt.esewi.com/accounts/login/",
+        loginCrendital,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            // "Access-Control-Allow-Origin": "*",
+          },
+        }
+      );
+      console.log(result.data);
+      // const resultData = await result.json();
+      if (result) {
+        setLoginUser(result);
+        navigate("/");
+      } else {
+        alert("invalide login crendital");
+      }
+    } catch (err) {
+      alert("somethisn went wrong");
+    }
+    console.log(loginCrendital);
+  };
   return (
     <div>
       <section className="relative flex flex-wrap lg:h-screen lg:items-center">
@@ -167,7 +210,10 @@ const Login = () => {
             </Link>
           </div>
 
-          <form className="mx-auto mt-8 mb-0 max-w-md space-y-4">
+          <form
+            className="mx-auto mt-8 mb-0 max-w-md space-y-4"
+            onSubmit={handelSubmit}
+          >
             <div>
               <label for="email" className="sr-only">
                 Email
@@ -179,6 +225,14 @@ const Login = () => {
                   // onChange={(event) => { setemail(event.target.value) }}
                   className="w-full rounded-lg border-gray-300 p-4 pr-12 text-sm shadow-lg"
                   placeholder="Enter email"
+                  name="email"
+                  value={loginCrendital?.email}
+                  onChange={(e) =>
+                    setLoginCrendital({
+                      ...loginCrendital,
+                      [e.target.name]: e.target.value,
+                    })
+                  }
                 />
               </div>
             </div>
@@ -193,6 +247,14 @@ const Login = () => {
                   // onChange={(event) => { setPassword(event.target.value) }}
                   className="w-full rounded-lg border-gray-300 p-4 pr-12 text-sm shadow-lg"
                   placeholder="Enter password"
+                  value={loginCrendital?.password}
+                  name="password"
+                  onChange={(e) => {
+                    setLoginCrendital({
+                      ...loginCrendital,
+                      [e.target.name]: e.target.value,
+                    });
+                  }}
                 />
 
                 <span className="absolute inset-y-0 right-4 inline-flex items-center">

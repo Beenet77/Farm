@@ -73,10 +73,10 @@ function App() {
     <div className="App">
       <header className="App-header">
         <Routes>
-          <Route path="/" element={<Login />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route element={<ProtectedRoute />}>
-            <Route path="/home" element={<Home />} />
+            <Route path="/" element={<Home />} />
             <Route path="/weather" element={<Check />} />
             <Route path="/feedback" element={<Feedback />} />
             <Route path="/blogs" element={<Blog />} />

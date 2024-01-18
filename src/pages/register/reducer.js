@@ -3,6 +3,7 @@ export let initial = {
   middle_name: "",
   last_name: "",
   email: "",
+  phone_no: "",
   password: "",
   confirm_password: "",
 };

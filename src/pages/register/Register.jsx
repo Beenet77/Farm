@@ -1,12 +1,15 @@
 import React, { useReducer, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import Logo from "../../images/b.jpg";
 import BackgroundImage from "../../images/a.jpg";
 import ButtonPrimary from "../../components/ButtonPrimary";
 import { initial, reducer } from "./reducer";
+import axios from "axios";
 const Register = () => {
   let [state, dispatch] = useReducer(reducer, initial);
   const [userType, setUserType] = useState("Farmer");
+  const navigate = useNavigate();
   // const [password, setPassword] = useState([]);
   // const [confirmPassword, setConfirmPassword] = useState('');
   // const [first_name,setFirstName] = useState();
@@ -16,20 +19,42 @@ const Register = () => {
   };
   let handelUserRegister = async (e) => {
     e.preventDefault();
-    let result = await fetch("	http://kt.esewi.com/accounts/register/", {
-      mode: "no-cors",
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ...state,
-        role: userType,
-      }),
-    });
-    if (result) {
-      console.log(result);
-      console.log("user is register");
+    // console.log(state);
+    // return;
+    const userRegisterData = { ...state, role: userType };
+    console.log(userRegisterData);
+    // let result = await fetch("https://kt.esewi.com/accounts/register/", {
+    //   mode: "no-cors",
+    //   method: "POST",
+    //   headers: {
+    //     "Access-Control-Allow-Origin": "*",
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({
+    //     first_name: state?.first_name,
+    //     middle_name: state?.middle_name,
+    //     last_name: state?.last_name,
+    //     email: state?.email,
+    //     phone_no: state?.phone_no,
+    //     password: state?.password,
+    //     confirm_password: state?.confirm_password,
+    //     role: userType,
+    //   }),
+    // });
+    const result = await axios.post(
+      "https://kt.esewi.com/accounts/register/",
+      userRegisterData,
+      {
+        mode: "cors",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    console.log(result.data);
+    if (result.data) {
+      navigate("/login");
     }
   };
 
@@ -64,7 +89,6 @@ const Register = () => {
         </div>
 
         <form
-          method="POST"
           onSubmit={handelUserRegister}
           className="mx-auto mt-8 mb-0 max-w-md space-y-4"
         >
@@ -156,6 +180,27 @@ const Register = () => {
               />
             </div>
           </div>
+          <div>
+            <label htmlFor="email" className="sr-only">
+              Contact Number
+            </label>
+            <div className="relative">
+              <input
+                type="tel"
+                id="phone_no"
+                name="phone_no"
+                className="w-full rounded border-gray-200 p-4 pr-12 text-sm shadow-sm"
+                placeholder="Contact Number"
+                value={state.phone_no}
+                onChange={(e) => {
+                  dispatch({
+                    key: e.target.name,
+                    payload: e.target.value,
+                  });
+                }}
+              />
+            </div>
+          </div>
 
           <div>
             <label htmlFor="password" className="sr-only">
@@ -222,7 +267,7 @@ const Register = () => {
           <div className="flex items-center justify-between">
             <p className="text-sm text-gray-500">
               Already have an account?&nbsp;
-              <Link to="/" className="underline hover:font-semibold">
+              <Link to="/login" className="underline hover:font-semibold">
                 Login
               </Link>
             </p>
