@@ -14,9 +14,10 @@ import Home from "./pages/home/Home";
 import Mentors from "./pages/expert/Mentors";
 import ProductDetail from "./pages/home/ProductDetail";
 import NoticeBoard from "./pages/noticeboard/NoticeBoard";
+import ProtectedRoute from "./components/ProtectedRoute";
+import MarketPlace from "./pages/marketplace/MarketPlace";
 import Notice from "./components/Notice";
 import Check from "./pages/check/Check";
-import ProtectedRoute from "./components/ProtectedRoute";
 function App() {
   const router = createBrowserRouter([
     {
@@ -60,12 +61,8 @@ function App() {
       element: <NoticeBoard />,
     },
     {
-      path: "/notice",
-      element: <Notice />,
-    },
-    {
-      path: "/weather",
-      element: <Weather />,
+      path: "/marketplace",
+      element: <MarketPlace />,
     },
   ]);
 
@@ -81,7 +78,8 @@ function App() {
             <Route path="/feedback" element={<Feedback />} />
             <Route path="/blogs" element={<Blog />} />
             <Route path="/noticeboard" element={<NoticeBoard />} />
-            <Route path="/notice" element={<Notice />} />
+            <Route path="/expert" element={<Mentors />} />
+            <Route path="/marketplace" element={<MarketPlace />} />
             <Route path="/products/:productId" element={<ProductDetail />} />
             <Route path="/blogs/:id" element={<Blogpost />} />
           </Route>

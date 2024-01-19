@@ -15,7 +15,7 @@ function Weather() {
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
         <div className="bg-white p-8 rounded-lg shadow-md">
           <h1 className="text-3xl font-semibold text-gray-800 items-center justify-center mb-4">
-            Weather Forecast
+            Weather Forecastbbbbb
           </h1>
           <div className=" gap-2 justify-between items-center mb-6">
             <div className="">

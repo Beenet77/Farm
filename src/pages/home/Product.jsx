@@ -11,7 +11,7 @@ function Product() {
   useEffect(() => {
     // Fetch product data from your fake API here
     // Replace 'YOUR_API_URL_HERE' with the actual API URL
-    fetch("https://fakestoreapi.com/products")
+    fetch("https://kt.esewi.com/blog/products/")
       .then((response) => response.json())
       .then((data) => setProducts(data))
       .catch((error) => console.error("Error fetching data:", error));

@@ -23,7 +23,7 @@ const Register = () => {
     // return;
     const userRegisterData = { ...state, role: userType };
     console.log(userRegisterData);
-    // let result = await fetch("https://kt.esewi.com/accounts/register/", {
+    // let result = await fetch("https://kt.esewi.com/accounts/register", {
     //   mode: "no-cors",
     //   method: "POST",
     //   headers: {
@@ -42,7 +42,7 @@ const Register = () => {
     //   }),
     // });
     const result = await axios.post(
-      "https://kt.esewi.com/accounts/register/",
+      "https://kt.esewi.com/accounts/register",
       userRegisterData,
       {
         mode: "cors",

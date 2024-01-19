@@ -12,7 +12,7 @@ const Navbar = () => {
             <img src={Logo} alt="logo" className="h-[55px] rounded-md" />
           </div>
           <ul class="flex space-x-10">
-            <Link to="/home">
+            <Link to="/">
               <li class="hover:bg-[rgb(56,206,189)] rounded-md ease-in duration-100 hover:text-white px-1 py-1  ">
                 Home
               </li>
@@ -33,6 +33,11 @@ const Navbar = () => {
             <Link to="/blogs">
               <li class="hover:bg-[rgb(56,206,189)] rounded-md ease-in duration-100 hover:text-white px-1 py-1">
                 Blogs
+              </li>
+            </Link>
+            <Link to="/marketplace">
+              <li class="hover:bg-[rgb(56,206,189)] rounded-md ease-in duration-100 hover:text-white px-1 py-1">
+                MarketPlace
               </li>
             </Link>
             <Link to="/expert">

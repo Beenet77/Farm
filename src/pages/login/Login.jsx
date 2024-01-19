@@ -142,8 +142,9 @@
 // export default Login;
 import { React, useState } from "react";
 import { Link } from "react-router-dom";
-// import Logo from "../images/logo.png";
 import ButtonPrimary from "../../components/ButtonPrimary";
+import Logo from "../../images/b.jpg";
+
 import { useGlobalUserAuth } from "../../context/userAuthContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -197,7 +198,7 @@ const Login = () => {
           <div className="home_reference_section my-5">
             <Link to="/" className="cursor-pointer">
               <figure className="flex justify-center items-center">
-                {/* <img src={Logo} alt="Logo" className="w-20" /> */}
+                <img src={Logo} alt="Logo" className="w-20" />
               </figure>
             </Link>
           </div>
@@ -206,7 +207,7 @@ const Login = () => {
               to="/"
               className="cursor-pointer text-[#f2d16c] text-[34px] font-semibold "
             >
-              <span>Nursery Nepal</span>
+              <span>Farm Connect</span>
             </Link>
           </div>
 

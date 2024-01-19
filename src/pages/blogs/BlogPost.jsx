@@ -1,23 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import Axios from 'axios';
-import Navbar from '../../components/Navbar';
-import Footer from '../../components/Footer';
-import Avatar from '../../images/agric.jpg';
-import Banner from '../../images/agriculture-products.jpg';
-import TitlePrimary from '../../components/TitlePrimary';
-import BlogCard from '../../components/BlogCard';
+import React, { useEffect, useState } from "react";
+import Axios from "axios";
+import Navbar from "../../components/Navbar";
+import Footer from "../../components/Footer";
+import Avatar from "../../images/agric.jpg";
+import Banner from "../../images/agriculture-products.jpg";
+import TitlePrimary from "../../components/TitlePrimary";
+import BlogCard from "../../components/BlogCard";
 
 const Blogpost = () => {
   const [blogposts, setblogposts] = useState(null);
 
   useEffect(() => {
     // Replace with the actual API endpoint for fetching blog post data
-    Axios.get('http://localhost:8000/blogposts/:id')
+    Axios.get("https://kt.esewi.com/blog/posts/")
       .then((response) => {
         setblogposts(response.data);
       })
       .catch((error) => {
-        console.error('Error fetching blog post data:', error);
+        console.error("Error fetching blog post data:", error);
       });
   }, []);
 
@@ -35,7 +35,11 @@ const Blogpost = () => {
               <div className="details text-xs font-base text-gray-700 px-1">
                 <div className="flex flex-row">
                   <div className="author_image_container flex items-center">
-                    <img src={Avatar} alt="" className="h-10 w-10 object-cover rounded" />
+                    <img
+                      src={Avatar}
+                      alt=""
+                      className="h-10 w-10 object-cover rounded"
+                    />
                   </div>
                   <div className="flex flex-col pl-3">
                     <div className="author_name">{blogposts.author}</div>
