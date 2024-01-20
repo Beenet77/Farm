@@ -169,7 +169,7 @@ const Login = () => {
       //   body: JSON.stringify(loginCrendital),
       // });
       const result = await axios.post(
-        "https://kt.esewi.com/accounts/login/",
+        "http://192.168.1.84:8000/accounts/login/",
         loginCrendital,
         {
           headers: {

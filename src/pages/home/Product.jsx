@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
+import { Howl } from "howler";
 
 import ProductDetail from "./ProductDetail";
 
@@ -7,11 +8,12 @@ import ProductDetail from "./ProductDetail";
 
 function Product() {
   const [products, setProducts] = useState([]);
-
+  // const [audiourl, setAudioUrl] = useState();
+  // console.log("audiourl", audiourl);
   useEffect(() => {
     // Fetch product data from your fake API here
     // Replace 'YOUR_API_URL_HERE' with the actual API URL
-    fetch("https://kt.esewi.com/blog/products/")
+    fetch("http://10..5.3.253:8000/api/products/")
       .then((response) => response.json())
       .then((data) => setProducts(data))
       .catch((error) => console.error("Error fetching data:", error));
@@ -24,6 +26,56 @@ function Product() {
     }
     return chunkedArray;
   };
+
+  // const playSound = async (productId) => {
+  //   // try {
+  //   // Replace 'YOUR_API_ENDPOINT' with the actual API endpoint that returns the sound file for the product
+  //   const apiEndpoint = `http://192.168.1.84:8000/generate_text_to_speech/${productId}/ `;
+  //   fetch(apiEndpoint)
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       setAudioUrl(data.audio_url);
+  //     })
+
+  //     .catch((error) => console.error("Error fetching data:", error));
+
+  //   // Fetch the sound file
+  //   // const response = await fetch(apiEndpoint);
+  //   // console.log("response", response.json());
+  //   // const buffer = await response.arrayBuffer();
+
+  //   // Create a Howl sound object with the buffer
+  //   // const sound = new Howl({
+  //   //   src: [buffer],
+  //   //   format: ["mp3"], // Adjust the format based on your API response
+  //   // });
+
+  //   // Play the sound
+  //   // sound.play();
+  // };
+
+  // useEffect(() => {
+  //   if (audiourl) {
+  //     console.log(audiourl);
+  //     // Create an audio element
+  //     const audio = new Audio("http://192.168.1.84:8000/" + audiourl);
+
+  //     // Event listener to play the audio when it can be played
+  //     const playAudio = () => {
+  //       audio.play();
+  //     };
+
+  //     // Attach the event listener
+  //     audio.addEventListener("canplay", playAudio);
+
+  //     // Clean up the event listener and audio element on component unmount
+  //     return () => {
+  //       audio.removeEventListener("canplay", playAudio);
+  //       audio.pause();
+  //       audio.currentTime = 0;
+  //     };
+  //   }
+  // }, [audiourl]);
 
   const productChunks = chunkArray(products, 5);
 
@@ -38,18 +90,28 @@ function Product() {
                 key={product.id}
                 className="bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition duration-300"
               >
-                <Link to={`/products/${product.id}`}>
+                <Link
+                  to={`/products/${product.id}`}
+                  className="group block overflow-hidden"
+                  // onClick={() => playSound(product.id)}
+                >
                   <img
-                    src={product.image}
+                    src={product?.image}
                     alt={product.title}
-                    className="w-full h-40 object-cover rounded-md"
+                    className="h-[350px] w-full object-cover transition duration-500 group-hover:scale-105 sm:h-[450px]"
                   />
-                  <h2 className="text-lg font-semibold mt-2">{product.name}</h2>
+                  <div className="relative bg-white pt-3">
+                    <h2 className="text-lg font-semibold mt-2 group-hover:underline group-hover:underline-offset-4">
+                      {product.name}
+                    </h2>
+                    <p className="text-gray-600">
+                      {product.category.product_name}
+                    </p>
+                    <p className="text-lg font-semibold text-green-500 mt-2">
+                      रू {product.price}
+                    </p>
+                  </div>
                 </Link>
-                <p className="text-gray-600">{product.category.product_name}</p>
-                <p className="text-lg font-semibold text-green-500 mt-2">
-                  रू {product.price}
-                </p>
               </div>
             ))}
           </div>

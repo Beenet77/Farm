@@ -9,7 +9,7 @@ const Blog = () => {
 
   useEffect(() => {
     const fetchBlogposts = async () => {
-      const res = await fetch("https://kt.esewi.com/blog/posts");
+      const res = await fetch("http://192.168.1.84:8000/blog/posts/");
       const data = await res.json();
       setBlogposts(data);
       console.log(data);

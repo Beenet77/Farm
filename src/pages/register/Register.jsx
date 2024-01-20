@@ -21,7 +21,7 @@ const Register = () => {
     e.preventDefault();
     // console.log(state);
     // return;
-    const userRegisterData = { ...state, role: userType };
+    const userRegisterData = { ...state };
     console.log(userRegisterData);
     // let result = await fetch("https://kt.esewi.com/accounts/register", {
     //   mode: "no-cors",
@@ -42,10 +42,11 @@ const Register = () => {
     //   }),
     // });
     const result = await axios.post(
-      "https://kt.esewi.com/accounts/register",
+      "http://10..5.3.253:8000/accounts/register/",
       userRegisterData,
       {
-        mode: "cors",
+        mode: "no-cors",
+        method: "POST",
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/json",

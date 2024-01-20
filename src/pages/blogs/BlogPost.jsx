@@ -12,7 +12,7 @@ const Blogpost = () => {
 
   useEffect(() => {
     // Replace with the actual API endpoint for fetching blog post data
-    Axios.get("https://kt.esewi.com/blog/posts/")
+    Axios.get("http://192.168.1.84:8000/blog/posts/")
       .then((response) => {
         setblogposts(response.data);
       })
