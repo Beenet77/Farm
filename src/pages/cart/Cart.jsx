@@ -1,6 +1,6 @@
 // Cart.jsx
 import React from "react";
-import { useCart } from "../../CartContext";
+import { useCart } from "../../context/CartContex";
 
 const Cart = () => {
   const { cart, dispatch } = useCart();
