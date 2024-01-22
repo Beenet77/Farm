@@ -4,7 +4,7 @@ import {
   Route,
   Routes,
 } from "react-router-dom";
-import { CartProvider } from "./context/CartContex";
+import { CartProvider } from "./context/CartContext";
 import Login from "./pages/login/Login";
 import Register from "./pages/register/Register";
 import Blog from "./pages/blogs/Blog";

@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { useCart } from "../../CartContext";
+import { useCart } from "../../context/CartContext";
 import ButtonPrimary from "../../components/ButtonPrimary";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
