@@ -20,6 +20,7 @@ import MarketPlace from "./pages/marketplace/MarketPlace";
 import Cart from "./pages/cart/Cart";
 import Notice from "./components/Notice";
 import Check from "./pages/check/Check";
+import LayOut from "./components/LayOut";
 function App() {
   const router = createBrowserRouter([
     {
@@ -72,22 +73,27 @@ function App() {
     <CartProvider>
       <div className="App">
         <header className="App-header">
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route element={<ProtectedRoute />}>
-              <Route path="/" element={<Home />} />
-              <Route path="/weather" element={<Check />} />
-              <Route path="/feedback" element={<Feedback />} />
-              <Route path="/blogs" element={<Blog />} />
-              <Route path="/noticeboard" element={<NoticeBoard />} />
-              <Route path="/cart" element={<Cart />} />
-              <Route path="/expert" element={<Mentors />} />
-              <Route path="/marketplace" element={<MarketPlace />} />
-              <Route path="/products/:productId" element={<ProductDetail />} />
-              <Route path="/blogs/:id" element={<Blogpost />} />
-            </Route>
-          </Routes>
+          <LayOut>
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route element={<ProtectedRoute />}>
+                <Route path="/" element={<Home />} />
+                <Route path="/weather" element={<Check />} />
+                <Route path="/feedback" element={<Feedback />} />
+                <Route path="/blogs" element={<Blog />} />
+                <Route path="/noticeboard" element={<NoticeBoard />} />
+                <Route path="/cart" element={<Cart />} />
+                <Route path="/expert" element={<Mentors />} />
+                <Route path="/marketplace" element={<MarketPlace />} />
+                <Route
+                  path="/products/:productId"
+                  element={<ProductDetail />}
+                />
+                <Route path="/blogs/:id" element={<Blogpost />} />
+              </Route>
+            </Routes>
+          </LayOut>
           {/* <RouterProvider router={router} /> */}
         </header>
       </div>

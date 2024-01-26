@@ -1,6 +1,6 @@
 // ProductDetail.jsx
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { useCart } from "../../context/CartContext";
 import ButtonPrimary from "../../components/ButtonPrimary";
@@ -8,6 +8,7 @@ import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 
 const ProductDetail = () => {
+  const navigate = useNavigate();
   const { cart, dispatch } = useCart();
   const [detail, setDetail] = useState(null);
   const [audiourl, setAudioUrl] = useState();
@@ -16,7 +17,7 @@ const ProductDetail = () => {
   const getDetails = () => {
     try {
       axios
-        .get(`http://10.5.3.253:8000/api/products/${params.productId}`)
+        .get(`http://127.0.0.1:8000/api/products/${params.productId}`)
         .then((res) => {
           setDetail(res.data);
         });
@@ -31,12 +32,14 @@ const ProductDetail = () => {
   }, [params]);
 
   const playSound = async (productId) => {
-    const apiEndpoint = `http://10.5.3.253:8000/generate_text_to_speech/${productId}/`;
+    const apiEndpoint = `http://127.0.0.1:8000/generate_text_to_speech/${productId}/`;
     fetch(apiEndpoint)
       .then((response) => response.json())
       .then((data) => {
         playAudio(data.audio_url);
-        setAudioUrl("http://10.5.3.253:8000/" + data.audio_url);
+        setAudioUrl(
+          "http://127.0.0.1:8000/generate_text_to_speech/media/product_audio/1_ne.mp3"
+        );
       })
       .catch((error) => console.error("Error fetching data:", error));
   };
@@ -44,7 +47,7 @@ const ProductDetail = () => {
   async function playAudio(a) {
     if (a) {
       const audio = new Audio(
-        "http://192.168.1.84:8000/media/product_audio/1_ne.mp3"
+        "http://127.0.0.1:8000/generate_text_to_speech/media/product_audio/1_ne.mp3"
       );
       const playAudio = () => {
         audio.play();
@@ -53,31 +56,45 @@ const ProductDetail = () => {
     }
   }
 
-  const addToCartHandler = () => {
-    dispatch({ type: "ADD_TO_CART", payload: detail });
-  };
+  const previousCartData = JSON.parse(localStorage.getItem("cartData")) || [];
+
+  function addToCartHandler(data) {
+    if (Boolean(previousCartData.find((el) => el.id === data.id))) {
+      alert(" Already added to cart");
+    }
+    if (
+      data?.created_at &&
+      !Boolean(previousCartData.find((el) => el.id === data.id))
+    ) {
+      let cartData = [data, ...previousCartData];
+      localStorage.setItem("cartData", JSON.stringify(cartData));
+      alert("product is added to cart");
+      window.location.reload(true);
+    }
+  }
 
   return (
     <div>
       {detail ? (
         <>
-          <Navbar />
-          <div className="flex mr-8 mb-5">
+          <div className="flex mr-8 mb-5 p-5">
             <div className="flex-initial w-76">
-              {/* Display product details */}
+              <img width="400px" src={detail?.image} alt="" />
             </div>
-            <div className="flex-initial w-36 mt-12">
+            <div className="flex-initial ml-5 ">
               {/* Additional product details */}
-              <h3 className="font-bold">{detail.title}</h3>
-              <br />
-              <p>{detail.description}</p>
-              <p>${detail.price}</p>
-              <ButtonPrimary text="Add to Cart" onClick={addToCartHandler}>
+              <p style={{ color: "red" }}>Rs.{detail?.price}</p>
+              <h1 className=""> {detail?.name}</h1>
+              <p>{detail?.description}</p>
+              {/* <p>${detail.price}</p> */}
+              <ButtonPrimary
+                text="Add to Cart"
+                onClick={() => addToCartHandler(detail)}
+              >
                 Add to Cart
               </ButtonPrimary>
             </div>
           </div>
-          <Footer />
         </>
       ) : (
         <p>Loading...</p>

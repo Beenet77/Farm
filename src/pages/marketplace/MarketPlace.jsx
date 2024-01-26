@@ -42,7 +42,6 @@ const MarketPlace = () => {
 
   return (
     <div>
-      <Navbar />
       <div className="container mx-auto py-8">
         <div className="flex flex-col items-start gap-4">
           <h1 className="text-3xl font-bold">Add Product</h1>
@@ -92,7 +91,6 @@ const MarketPlace = () => {
           </button>
         </div>
       </div>
-      <Footer />
     </div>
   );
 };

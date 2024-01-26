@@ -1,27 +1,28 @@
-// Cart.jsx
 import React from "react";
-import { useCart } from "../../context/CartContext";
 
 const Cart = () => {
-  const { cart, dispatch } = useCart();
+  const cartData = JSON.parse(localStorage.getItem("cartData")) || [];
+  console.log(cartData.length);
 
   const removeFromCartHandler = (productId) => {
-    dispatch({ type: "REMOVE_FROM_CART", payload: { id: productId } });
-  };
-
-  const updateQuantityHandler = (productId, quantity) => {
-    dispatch({ type: "UPDATE_QUANTITY", payload: { id: productId, quantity } });
+    if (productId) {
+      alert("are you sure you want to delete");
+      let a = cartData.filter((el) => el.id !== productId);
+      localStorage.setItem("cartData", JSON.stringify(a));
+      window.location.reload(true);
+    }
   };
 
   const clearCartHandler = () => {
-    dispatch({ type: "CLEAR_CART" });
+    localStorage.setItem("cartData", JSON.stringify(null));
+    window.location.reload(true);
   };
 
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Your Cart</h1>
       <ul>
-        {cart.map((item) => (
+        {cartData.map((item) => (
           <li key={item.id} className="flex items-center mb-4">
             <img
               src={item.image}
@@ -42,7 +43,7 @@ const Cart = () => {
                 type="number"
                 min="1"
                 value={item.quantity}
-                onChange={(e) => updateQuantityHandler(item.id, e.target.value)}
+                // onChange={(e) => updateQuantityHandler(item.id, e.target.value)}
                 className="border border-gray-300 rounded-md px-2 py-1 mt-2"
               />
             </div>

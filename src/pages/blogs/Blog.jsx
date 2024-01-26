@@ -26,7 +26,6 @@ const Blog = () => {
   }
   return (
     <div>
-      <Navbar />
       <TitlePrimary text="Blogposts" />
       <div className="container mx-auto px-4 lg:px-10 flex flex-wrap justify-between">
         {blogposts.map((blogpost) => (
@@ -42,8 +41,6 @@ const Blog = () => {
           </div>
         ))}
       </div>
-
-      <Footer />
     </div>
   );
 };

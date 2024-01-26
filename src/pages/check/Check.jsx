@@ -1,40 +1,40 @@
-import React, { useState } from 'react';
-import Navbar from '../../components/Navbar';
-import Herosection from '../..//components/Herosecton';
-import Select from 'react-select';
+import React, { useState } from "react";
+import Navbar from "../../components/Navbar";
+import Herosection from "../..//components/Herosecton";
+import Select from "react-select";
 
 const data = [
   {
-    place: 'Kathmandu',
-    temperature: '28°C',
-    description: 'Partly Cloudy',
-    humidity: '63%',
+    place: "Kathmandu",
+    temperature: "28°C",
+    description: "Partly Cloudy",
+    humidity: "63%",
   },
   {
-    place: 'Pokhara',
-    temperature: '26°C',
-    description: 'Sunny',
-    humidity: '58%',
+    place: "Pokhara",
+    temperature: "26°C",
+    description: "Sunny",
+    humidity: "58%",
   },
   {
-    place: 'Udayapur',
-    temperature: '30°C',
-    description: 'Clear Sky',
-    humidity: '70%',
+    place: "Udayapur",
+    temperature: "30°C",
+    description: "Clear Sky",
+    humidity: "70%",
   },
   {
-    place: 'Butwal',
-    temperature: '29°C',
-    description: 'Scattered Clouds',
-    humidity: '67%',
+    place: "Butwal",
+    temperature: "29°C",
+    description: "Scattered Clouds",
+    humidity: "67%",
   },
 ];
 
 const options = [
-  { value: 'Kathmandu', label: 'Kathmandu' },
-  { value: 'Pokhara', label: 'Pokhara' },
-  { value: 'Udayapur', label: 'Udayapur' },
-  { value: 'Butwal', label: 'Butwal' },
+  { value: "Kathmandu", label: "Kathmandu" },
+  { value: "Pokhara", label: "Pokhara" },
+  { value: "Udayapur", label: "Udayapur" },
+  { value: "Butwal", label: "Butwal" },
 ];
 
 const Check = () => {
@@ -49,8 +49,7 @@ const Check = () => {
 
   return (
     <div>
-      <Navbar />
-      <Herosection className =' mt-10' />
+      <Herosection className=" mt-10" />
 
       <div className="p-0 pt-20  flex items-center justify-center ">
         <div className="bg-white p-8 rounded-lg shadow-md -mt-30">
@@ -59,23 +58,23 @@ const Check = () => {
           </h1>
           <div className=" flex justify-between items-center mb-6">
             {data.map((d) => {
-                if(d.place === (selectedOption && selectedOption.value)){
-                    return <p>{d.temperature}</p>
-                }
+              if (d.place === (selectedOption && selectedOption.value)) {
+                return <p>{d.temperature}</p>;
+              }
               <div
                 key={d.place}
                 onClick={() => handlePlaceClick(d.place)} // Handle click event
                 style={{
-                  cursor: 'pointer',
+                  cursor: "pointer",
                   fontWeight:
                     selectedWeather && selectedWeather.place === d.place
-                      ? 'bold'
-                      : 'normal', // Highlight selected place
+                      ? "bold"
+                      : "normal", // Highlight selected place
                 }}
               >
                 {d.place} <br />
-              </div>
-})}
+              </div>;
+            })}
             <Select
               defaultValue={selectedOption}
               onChange={setSelectedOption}
@@ -99,13 +98,13 @@ const Check = () => {
                 className="w-16 h-16"
               />
               <p className="text-xl font-semibold text-gray-800">
-                {selectedWeather ? selectedWeather.description : ''}
+                {selectedWeather ? selectedWeather.description : ""}
               </p>
             </div>
 
             <div className="text-right">
               <p className="text-4xl font-bold text-blue-500">
-                {selectedWeather ? selectedWeather.temperature : ''}
+                {selectedWeather ? selectedWeather.temperature : ""}
               </p>
               {/* <p className="text-gray-600">Thursday, 16th September</p> */}
             </div>
@@ -113,7 +112,7 @@ const Check = () => {
 
           <div className="mt-6">
             <p className="text-gray-600">
-              {selectedWeather ? 'Humidity: ' + selectedWeather.humidity : ''}
+              {selectedWeather ? "Humidity: " + selectedWeather.humidity : ""}
             </p>
           </div>
         </div>
