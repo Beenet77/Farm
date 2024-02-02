@@ -9,7 +9,7 @@ import Login from "./pages/login/Login";
 import Register from "./pages/register/Register";
 import Blog from "./pages/blogs/Blog";
 import Blogpost from "./pages/blogs/BlogPost";
-import Weather from "./pages/weather/Weather";
+import Weather from "./pages/weather/Weather.jsx";
 import Feedback from "./pages/feedback/Feedback";
 import Home from "./pages/home/Home";
 import Mentors from "./pages/expert/Mentors";
@@ -39,10 +39,7 @@ function App() {
       path: "/blogs/:id",
       element: <Blogpost />,
     },
-    {
-      path: "/weather",
-      element: <Check />,
-    },
+
     {
       path: "/feedback",
       element: <Feedback />,
@@ -79,7 +76,7 @@ function App() {
               <Route path="/register" element={<Register />} />
               <Route element={<ProtectedRoute />}>
                 <Route path="/" element={<Home />} />
-                <Route path="/weather" element={<Check />} />
+                <Route path="/weather" element={<Weather />} />
                 <Route path="/feedback" element={<Feedback />} />
                 <Route path="/blogs" element={<Blog />} />
                 <Route path="/noticeboard" element={<NoticeBoard />} />

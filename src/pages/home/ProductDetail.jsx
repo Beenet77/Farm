@@ -78,8 +78,8 @@ const ProductDetail = () => {
       {detail ? (
         <>
           <div className="flex mr-8 mb-5 p-5">
-            <div className="flex-initial w-76">
-              <img width="400px" src={detail?.image} alt="" />
+            <div className="flex-initial w-400">
+              <img className="w-96" src={detail?.image} alt="" />
             </div>
             <div className="flex-initial ml-5 ">
               {/* Additional product details */}
