@@ -32,7 +32,7 @@ const ProductDetail = () => {
   }, [params]);
 
   const playSound = async (productId) => {
-    const apiEndpoint = `http://127.0.0.1:8000/generate_text_to_speech/${productId}/`;
+    const apiEndpoint = `https://text-to-speech-neural-google.p.rapidapi.com/v1/synthesis/client-voices`;
     try {
       const response = await fetch(apiEndpoint);
       if (!response.ok) {

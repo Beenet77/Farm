@@ -7,8 +7,9 @@ function Product() {
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
     id: "",
-    productname: "",
-    productdetail: "",
+    name: "",
+    description: "",
+    price: "",
     category: "",
     image: null,
   });
@@ -46,8 +47,9 @@ function Product() {
       setShowModal(false);
       setFormData({
         id: "",
-        productname: "",
-        productdetail: "",
+        name: "",
+        description: "",
+        price: "",
         category: "",
         image: null,
       });
@@ -87,16 +89,16 @@ function Product() {
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
                 <label
-                  htmlFor="productname"
+                  htmlFor="name"
                   className="block text-sm font-medium text-gray-700"
                 >
                   Product Name
                 </label>
                 <input
                   type="text"
-                  id="productname"
-                  name="productname"
-                  value={formData.productname}
+                  id="name"
+                  name="name"
+                  value={formData.name}
                   onChange={handleInputChange}
                   className="mt-1 p-2 border rounded-md w-full focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                   required
@@ -104,15 +106,31 @@ function Product() {
               </div>
               <div className="mb-4">
                 <label
-                  htmlFor="productdetail"
+                  htmlFor="description"
                   className="block text-sm font-medium text-gray-700"
                 >
                   Product Detail
                 </label>
                 <textarea
-                  id="productdetail"
-                  name="productdetail"
-                  value={formData.productdetail}
+                  id="description"
+                  name="description"
+                  value={formData.description}
+                  onChange={handleInputChange}
+                  className="mt-1 p-2 border rounded-md w-full focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  required
+                ></textarea>
+              </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="price"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Price
+                </label>
+                <textarea
+                  id="price"
+                  name="price"
+                  value={formData.price}
                   onChange={handleInputChange}
                   className="mt-1 p-2 border rounded-md w-full focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                   required
@@ -189,9 +207,9 @@ function Product() {
                   />
                   <div className="relative bg-white pt-3">
                     <h2 className="text-lg font-semibold mt-2 group-hover:underline group-hover:underline-offset-4">
-                      {product.productname}
+                      {product.name}
                     </h2>
-                    <p className="text-gray-600">{product.category}</p>
+                    {/* <p className="text-gray-600">{product.category}</p> */}
                     <p className="text-lg font-semibold text-green-500 mt-2">
                       रू {product.price}
                     </p>
