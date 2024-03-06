@@ -1,4 +1,3 @@
-// src/components/Weather.js
 import React, { useState, useEffect } from "react";
 import { FiSearch } from "react-icons/fi";
 import axios from "axios";
@@ -10,7 +9,6 @@ const Weather = () => {
   const [backgroundImage, setBackgroundImage] = useState("");
 
   const openWeatherMapApiKey = "71f6779186cc32448b4c412eea65b982";
-  const unsplashAccessKey = "YOUR_UNSPLASH_ACCESS_KEY";
 
   useEffect(() => {
     // Get user's geolocation
@@ -37,19 +35,23 @@ const Weather = () => {
         }
       );
     }
-  }, [openWeatherMapApiKey]);
+  }, []);
 
-  const fetchWeather = async () => {
+  useEffect(() => {
+    if (weatherData) {
+      fetchWeatherForecast(weatherData.coord.lat, weatherData.coord.lon);
+    }
+  }, [weatherData]);
+
+  const fetchWeatherForecast = async (lat, lon) => {
     try {
       const response = await axios.get(
-        `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${openWeatherMapApiKey}&units=metric`
+        `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,hourly&appid=${openWeatherMapApiKey}&units=metric`
       );
-      setWeatherData(response.data);
-      setBackgroundImage(getBackgroundImage(response.data.weather[0].icon));
+      setWeatherData((prevData) => ({ ...prevData, forecast: response.data }));
       setError(null);
     } catch (err) {
-      setWeatherData(null);
-      setError("City not found");
+      setError("Failed to fetch weather forecast");
     }
   };
 
@@ -81,6 +83,37 @@ const Weather = () => {
     );
   };
 
+  const renderEmoji = (description) => {
+    if (description.includes("clear")) return "☀️";
+    if (description.includes("cloud")) return "☁️";
+    if (description.includes("rain")) return "🌧️";
+    if (description.includes("storm")) return "⛈️";
+    if (description.includes("snow")) return "❄️";
+    if (description.includes("mist") || description.includes("fog"))
+      return "🌫️";
+    return "🌦️";
+  };
+
+  const renderForecast = () => {
+    if (weatherData && weatherData.forecast && weatherData.forecast.daily) {
+      return weatherData.forecast.daily.slice(1, 8).map((day, index) => (
+        <div key={index} className="mt-4">
+          <h3 className="text-xl font-semibold mb-2">
+            {new Date(day.dt * 1000).toLocaleDateString("en-US", {
+              weekday: "long",
+            })}
+          </h3>
+          <p>Temperature: {day.temp.day} °C</p>
+          <p>
+            Weather: {renderEmoji(day.weather[0].description)}{" "}
+            {day.weather[0].description}
+          </p>
+        </div>
+      ));
+    }
+    return null;
+  };
+
   return (
     <div
       className="bg-cover bg-center min-h-screen flex items-center justify-center"
@@ -98,7 +131,7 @@ const Weather = () => {
           />
           <button
             className="bg-blue-500 text-white p-2 rounded-r-md"
-            onClick={fetchWeather}
+            onClick={() => fetchWeatherForecast(city)}
           >
             <FiSearch />
           </button>
@@ -117,6 +150,11 @@ const Weather = () => {
             </p>
           </div>
         )}
+
+        <h2 className="text-2xl font-semibold mt-8 mb-4 text-gray-800">
+          7-Day Forecast
+        </h2>
+        {renderForecast()}
 
         {error && <p className="text-red-500 mt-4">{error}</p>}
       </div>

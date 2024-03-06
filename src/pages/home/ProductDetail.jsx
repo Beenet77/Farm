@@ -33,22 +33,22 @@ const ProductDetail = () => {
 
   const playSound = async (productId) => {
     const apiEndpoint = `http://127.0.0.1:8000/generate_text_to_speech/${productId}/`;
-    fetch(apiEndpoint)
-      .then((response) => response.json())
-      .then((data) => {
-        playAudio(data.audio_url);
-        setAudioUrl(
-          "http://127.0.0.1:8000/generate_text_to_speech/media/product_audio/1_ne.mp3"
-        );
-      })
-      .catch((error) => console.error("Error fetching data:", error));
+    try {
+      const response = await fetch(apiEndpoint);
+      if (!response.ok) {
+        throw new Error("Failed to fetch audio");
+      }
+      const data = await response.json();
+      playAudio(data.audio_url);
+      setAudioUrl(data.audio_url);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
 
-  async function playAudio(a) {
-    if (a) {
-      const audio = new Audio(
-        "http://127.0.0.1:8000/generate_text_to_speech/media/product_audio/1_ne.mp3"
-      );
+  async function playAudio(audioUrl) {
+    if (audioUrl) {
+      const audio = new Audio(audioUrl);
       const playAudio = () => {
         audio.play();
       };

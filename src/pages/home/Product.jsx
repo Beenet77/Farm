@@ -1,24 +1,66 @@
 import React, { useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
-import { Howl } from "howler";
-
-import ProductDetail from "./ProductDetail";
-
-// import Home from "../home/Home";
+import { Link } from "react-router-dom";
+import axios from "axios";
 
 function Product() {
   const [products, setProducts] = useState([]);
-  // const [audiourl, setAudioUrl] = useState();
-  // console.log("audiourl", audiourl);
+  const [showModal, setShowModal] = useState(false);
+  const [formData, setFormData] = useState({
+    id: "",
+    productname: "",
+    productdetail: "",
+    category: "",
+    image: null,
+  });
+
   useEffect(() => {
-    // Fetch product data from your fake API here
-    // Replace 'YOUR_API_URL_HERE' with the actual API URL
-    fetch("http://127.0.0.1:8000/api/products/")
-      .then((response) => response.json())
-      .then((data) => setProducts(data))
-      .catch((error) => console.error("Error fetching data:", error));
+    fetchProducts();
   }, []);
-  console.log(fetch);
+
+  const fetchProducts = async () => {
+    try {
+      const response = await axios.get("http://127.0.0.1:8000/api/products/");
+      setProducts(response.data);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleImageChange = (e) => {
+    setFormData({ ...formData, image: e.target.files[0] });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const formDataObj = new FormData();
+      formDataObj.append("productname", formData.productname);
+      formDataObj.append("productdetail", formData.productdetail);
+      formDataObj.append("category", formData.category);
+      formDataObj.append("image", formData.image);
+      await axios.post("http://127.0.0.1:8000/api/products/", formDataObj);
+      setShowModal(false);
+      setFormData({
+        id: "",
+        productname: "",
+        productdetail: "",
+        category: "",
+        image: null,
+      });
+      fetchProducts();
+    } catch (error) {
+      console.error("Error adding product:", error);
+    }
+  };
+
+  const toggleModal = () => {
+    setShowModal(!showModal);
+  };
+
   const chunkArray = (arr, chunkSize) => {
     const chunkedArray = [];
     for (let i = 0; i < arr.length; i += chunkSize) {
@@ -27,61 +69,107 @@ function Product() {
     return chunkedArray;
   };
 
-  // const playSound = async (productId) => {
-  //   // try {
-  //   // Replace 'YOUR_API_ENDPOINT' with the actual API endpoint that returns the sound file for the product
-  //   const apiEndpoint = `http://192.168.1.84:8000/generate_text_to_speech/${productId}/ `;
-  //   fetch(apiEndpoint)
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       setAudioUrl(data.audio_url);
-  //     })
-
-  //     .catch((error) => console.error("Error fetching data:", error));
-
-  //   // Fetch the sound file
-  //   // const response = await fetch(apiEndpoint);
-  //   // console.log("response", response.json());
-  //   // const buffer = await response.arrayBuffer();
-
-  //   // Create a Howl sound object with the buffer
-  //   // const sound = new Howl({
-  //   //   src: [buffer],
-  //   //   format: ["mp3"], // Adjust the format based on your API response
-  //   // });
-
-  //   // Play the sound
-  //   // sound.play();
-  // };
-
-  // useEffect(() => {
-  //   if (audiourl) {
-  //     console.log(audiourl);
-  //     // Create an audio element
-  //     const audio = new Audio("http://192.168.1.84:8000/" + audiourl);
-
-  //     // Event listener to play the audio when it can be played
-  //     const playAudio = () => {
-  //       audio.play();
-  //     };
-
-  //     // Attach the event listener
-  //     audio.addEventListener("canplay", playAudio);
-
-  //     // Clean up the event listener and audio element on component unmount
-  //     return () => {
-  //       audio.removeEventListener("canplay", playAudio);
-  //       audio.pause();
-  //       audio.currentTime = 0;
-  //     };
-  //   }
-  // }, [audiourl]);
-
-  const productChunks = chunkArray(products, 5);
+  const productChunks = chunkArray(products, 4);
 
   return (
     <div className="container mx-auto mt-4">
       <h1 className="text-2xl font-semibold mb-4">Products</h1>
+      <button
+        className="absolute top-4 left-4 bg-blue-500 text-white py-2 px-4 rounded-md"
+        onClick={toggleModal}
+      >
+        Add Product
+      </button>
+      {showModal && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-8 rounded-lg w-96">
+            <h2 className="text-2xl font-semibold mb-4">Add Product</h2>
+            <form onSubmit={handleSubmit}>
+              <div className="mb-4">
+                <label
+                  htmlFor="productname"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Product Name
+                </label>
+                <input
+                  type="text"
+                  id="productname"
+                  name="productname"
+                  value={formData.productname}
+                  onChange={handleInputChange}
+                  className="mt-1 p-2 border rounded-md w-full focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="productdetail"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Product Detail
+                </label>
+                <textarea
+                  id="productdetail"
+                  name="productdetail"
+                  value={formData.productdetail}
+                  onChange={handleInputChange}
+                  className="mt-1 p-2 border rounded-md w-full focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  required
+                ></textarea>
+              </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="category"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Category
+                </label>
+                <input
+                  type="text"
+                  id="category"
+                  name="category"
+                  value={formData.category}
+                  onChange={handleInputChange}
+                  className="mt-1 p-2 border rounded-md w-full focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="image"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Image
+                </label>
+                <input
+                  type="file"
+                  id="image"
+                  name="image"
+                  onChange={handleImageChange}
+                  className="mt-1 p-2 border rounded-md w-full focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  required
+                />
+              </div>
+              <div className="flex justify-between">
+                <button
+                  type="button"
+                  onClick={toggleModal}
+                  className="bg-gray-500 text-white py-2 px-4 rounded-md"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="bg-blue-500 text-white py-2 px-4 rounded-md"
+                >
+                  Add Product
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
       <div>
         {productChunks.map((chunk, index) => (
           <div key={index} className="grid grid-cols-4 gap-4">
@@ -93,7 +181,6 @@ function Product() {
                 <Link
                   to={`/products/${product.id}`}
                   className="group block overflow-hidden"
-                  // onClick={() => playSound(product.id)}
                 >
                   <img
                     src={product?.image}
@@ -102,11 +189,9 @@ function Product() {
                   />
                   <div className="relative bg-white pt-3">
                     <h2 className="text-lg font-semibold mt-2 group-hover:underline group-hover:underline-offset-4">
-                      {product.name}
+                      {product.productname}
                     </h2>
-                    <p className="text-gray-600">
-                      {product.category.product_name}
-                    </p>
+                    <p className="text-gray-600">{product.category}</p>
                     <p className="text-lg font-semibold text-green-500 mt-2">
                       रू {product.price}
                     </p>
@@ -119,18 +204,6 @@ function Product() {
       </div>
     </div>
   );
-}
-
-function ProductDetailPage({ products }) {
-  console.log(products);
-  const { productId } = useParams();
-  const product = products.find((p) => p.id === parseInt(productId, 10));
-
-  if (!product) {
-    return <div>Product not found</div>;
-  }
-
-  return <ProductDetail product={product} />;
 }
 
 export default Product;
