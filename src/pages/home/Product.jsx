@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from "react";
+
+import Select from "react-select";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
 function Product() {
   const [products, setProducts] = useState([]);
+  const [cat, setCat] = useState([]);
+  const [catOptions, setCatOptions] = useState([]);
+
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
     id: "",
@@ -15,13 +20,37 @@ function Product() {
   });
 
   useEffect(() => {
-    fetchProducts();
+    fetchProducts(null);
   }, []);
 
-  const fetchProducts = async () => {
+  useEffect(() => {
+    fetchCat();
+  }, []);
+
+  const fetchProducts = async (catid) => {
     try {
       const response = await axios.get("http://127.0.0.1:8000/api/products/");
-      setProducts(response.data);
+      if (catid) {
+        setProducts(response.data.filter((el) => el.category === catid));
+      } else {
+        setProducts(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  };
+
+  const fetchCat = async () => {
+    try {
+      const response = await axios.get(
+        "http://127.0.0.1:8000/api/product-category/"
+      );
+      setCat(response.data);
+      setCatOptions(
+        response.data.map((el) => {
+          return { value: el.id, label: el.product_name };
+        })
+      );
     } catch (error) {
       console.error("Error fetching products:", error);
     }
@@ -29,6 +58,10 @@ function Product() {
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSelectChange = (e) => {
+    setFormData({ ...formData, category: e.value });
   };
 
   const handleImageChange = (e) => {
@@ -42,7 +75,6 @@ function Product() {
       formDataObj.append("name", formData.name);
       formDataObj.append("description", formData.description);
       formDataObj.append("price", formData.price);
-
       formDataObj.append("category", formData.category);
       formDataObj.append("image", formData.image);
       await axios.post("http://127.0.0.1:8000/api/products/", formDataObj);
@@ -61,6 +93,11 @@ function Product() {
     }
   };
 
+  // const catOptions = [{
+  //   value:{},
+  //   label:{cat.product_name}
+  // }]
+
   const toggleModal = () => {
     setShowModal(!showModal);
   };
@@ -73,10 +110,26 @@ function Product() {
     return chunkedArray;
   };
 
+  function handleCatClick(a) {
+    fetchProducts(a);
+  }
+
   const productChunks = chunkArray(products, 4);
 
   return (
-    <div className="container mx-auto mt-4">
+    <div className="min-h-[85vh] container mx-auto mt-4">
+      <div>
+        <ul className="flex justify-between">
+          {cat.map((el) => (
+            <li
+              className="cursor-pointer text-blue-500	underline underline-offset-1 uppercase"
+              onClick={() => handleCatClick(el.id)}
+            >
+              {el.product_name}
+            </li>
+          ))}
+        </ul>
+      </div>
       <h1 className="text-2xl font-semibold mb-4">Products</h1>
       <button
         className="absolute top-4 left-4 bg-blue-500 text-white py-2 px-4 rounded-md"
@@ -85,7 +138,7 @@ function Product() {
         Add Product
       </button>
       {showModal && (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 z-20 flex justify-center items-center">
           <div className="bg-white p-8 rounded-lg w-96">
             <h2 className="text-2xl font-semibold mb-4">Add Product</h2>
             <form onSubmit={handleSubmit}>
@@ -145,7 +198,8 @@ function Product() {
                 >
                   Category
                 </label>
-                <input
+                <Select options={catOptions} onChange={handleSelectChange} />
+                {/* <input
                   type="text"
                   id="category"
                   name="category"
@@ -153,7 +207,7 @@ function Product() {
                   onChange={handleInputChange}
                   className="mt-1 p-2 border rounded-md w-full focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                   required
-                />
+                /> */}
               </div>
               <div className="mb-4">
                 <label
@@ -205,7 +259,7 @@ function Product() {
                   <img
                     src={product?.image}
                     alt={product.title}
-                    className="w-full object-cover transition duration-500 group-hover:scale-105 sm:w-[455px]"
+                    className="w-full h-[230px] object-cover transition duration-500 group-hover:scale-105 sm:w-[455px]"
                   />
                   <div className="relative bg-white pt-3">
                     <h2 className="text-lg font-semibold mt-2 group-hover:underline group-hover:underline-offset-4">

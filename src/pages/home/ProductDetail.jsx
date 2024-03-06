@@ -1,17 +1,17 @@
-// ProductDetail.jsx
 import React, { useState, useEffect } from "react";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { useCart } from "../../context/CartContext";
 import ButtonPrimary from "../../components/ButtonPrimary";
-import Navbar from "../../components/Navbar";
-import Footer from "../../components/Footer";
+import { HiSpeakerWave } from "react-icons/hi2"; // Import speak icon
 
 const ProductDetail = () => {
   const navigate = useNavigate();
   const { cart, dispatch } = useCart();
   const [detail, setDetail] = useState(null);
-  const [audiourl, setAudioUrl] = useState();
+  const [relatedProducts, setRelatedProducts] = useState([]);
+
+  const [speaking, setSpeaking] = useState(false); // State to track speaking status
   const params = useParams();
 
   const getDetails = () => {
@@ -28,33 +28,42 @@ const ProductDetail = () => {
 
   useEffect(() => {
     getDetails(params);
-    playSound(params.productId);
   }, [params]);
 
-  const playSound = async (productId) => {
-    const apiEndpoint = `https://text-to-speech-neural-google.p.rapidapi.com/v1/synthesis/client-voices`;
+  useEffect(() => {
+    detail && fetchRelatedProducts(detail);
+  }, [detail]);
+
+  const fetchRelatedProducts = async (a) => {
     try {
-      const response = await fetch(apiEndpoint);
-      if (!response.ok) {
-        throw new Error("Failed to fetch audio");
+      const response = await axios.get("http://127.0.0.1:8000/api/products/");
+      if (a) {
+        setRelatedProducts(
+          response.data.filter((el) => el.category === a.category)
+        );
       }
-      const data = await response.json();
-      playAudio(data.audio_url);
-      setAudioUrl(data.audio_url);
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("Error fetching products:", error);
     }
   };
 
-  async function playAudio(audioUrl) {
-    if (audioUrl) {
-      const audio = new Audio(audioUrl);
-      const playAudio = () => {
-        audio.play();
-      };
-      audio.addEventListener("canplay", playAudio);
-    }
-  }
+  const speak = (text) => {
+    // Create a new speech synthesis instance
+    const synth = window.speechSynthesis;
+    const utterance = new SpeechSynthesisUtterance(text);
+
+    // Start speaking
+    synth.speak(utterance);
+
+    // Set speaking state to true
+    setSpeaking(true);
+
+    // Handle end of speaking
+    utterance.onend = () => {
+      // Set speaking state to false
+      setSpeaking(false);
+    };
+  };
 
   const previousCartData = JSON.parse(localStorage.getItem("cartData")) || [];
 
@@ -74,7 +83,7 @@ const ProductDetail = () => {
   }
 
   return (
-    <div>
+    <div className="min-h-[85vh] container mx-auto mt-4">
       {detail ? (
         <>
           <div className="flex mr-8 mb-5 p-5">
@@ -83,16 +92,64 @@ const ProductDetail = () => {
             </div>
             <div className="flex-initial ml-5 ">
               {/* Additional product details */}
-              <p style={{ color: "red" }}>Rs.{detail?.price}</p>
-              <h1 className=""> {detail?.name}</h1>
-              <p>{detail?.description}</p>
-              {/* <p>${detail.price}</p> */}
+              <p style={{ color: "red" }}>
+                Rs.{detail?.price}
+                <HiSpeakerWave
+                  className="ml-2 cursor-pointer size-8"
+                  onClick={() => speak(`मुल्य  ${detail?.price}`)}
+                />
+              </p>
+              <h1 className="">
+                {detail?.name}
+                <HiSpeakerWave
+                  className="ml-2 cursor-pointer size-8"
+                  onClick={() => speak(`नाम ${detail?.name}`)}
+                />
+              </h1>
+              <p>
+                {detail?.description}
+                <HiSpeakerWave
+                  className="ml-2 cursor-pointer size-8"
+                  onClick={() => speak(`विवरण${detail?.description}`)}
+                />
+              </p>
               <ButtonPrimary
                 text="Add to Cart"
                 onClick={() => addToCartHandler(detail)}
               >
                 Add to Cart
               </ButtonPrimary>
+            </div>
+          </div>
+          <h3>Related Products</h3>
+          <div>
+            <div className="grid grid-cols-4 gap-4">
+              {relatedProducts.map((product) => (
+                <div
+                  key={product.id}
+                  className=" bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition duration-300"
+                >
+                  <Link
+                    to={`/products/${product.id}`}
+                    className="group block overflow-hidden"
+                  >
+                    <img
+                      src={product?.image}
+                      alt={product.title}
+                      className="w-full h-[230px] object-cover transition duration-500 group-hover:scale-105 sm:w-[455px]"
+                    />
+                    <div className="relative bg-white pt-3">
+                      <h2 className="text-lg font-semibold mt-2 group-hover:underline group-hover:underline-offset-4">
+                        {product.name}
+                      </h2>
+                      {/* <p className="text-gray-600">{product.category}</p> */}
+                      <p className="text-lg font-semibold text-green-500 mt-2">
+                        रू {product.price}
+                      </p>
+                    </div>
+                  </Link>
+                </div>
+              ))}
             </div>
           </div>
         </>

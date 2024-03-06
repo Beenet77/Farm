@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
 import Axios from "axios";
-import Navbar from "../../components/Navbar";
-import Footer from "../../components/Footer";
-import Avatar from "../../images/agric.jpg";
-import Banner from "../../images/agriculture-products.jpg";
 import TitlePrimary from "../../components/TitlePrimary";
 import BlogCard from "../../components/BlogCard";
+import { useParams } from "react-router-dom";
 
 const Blogpost = () => {
-  const [blogposts, setblogposts] = useState(null);
+  const [blogposts, setblogposts] = useState([]);
+  const params = useParams();
+
+  console.log(params);
 
   useEffect(() => {
     // Replace with the actual API endpoint for fetching blog post data
-    Axios.get("http://192.168.1.84:8000/blog/posts/")
+    Axios.get(`http://127.0.0.1:8000/blog/posts/${params.id}`)
       .then((response) => {
         setblogposts(response.data);
       })
@@ -23,11 +23,10 @@ const Blogpost = () => {
 
   return (
     <>
-      <Navbar />
-      <figure>
+      {/* <figure>
         <img src={Banner} className="object-cover w-full" alt="" />
-      </figure>
-      <div className="container mx-auto px-20 py-5">
+      </figure> */}
+      <div className="min-h-[85vh] container mx-auto mt-4 px-20 py-5">
         {blogposts && (
           <>
             <h1 className="font-bold text-4xl">{blogposts.title}</h1>
@@ -36,9 +35,9 @@ const Blogpost = () => {
                 <div className="flex flex-row">
                   <div className="author_image_container flex items-center">
                     <img
-                      src={Avatar}
+                      src={blogposts.image}
                       alt=""
-                      className="h-10 w-10 object-cover rounded"
+                      // className="h-10 w-10 object-cover rounded"
                     />
                   </div>
                   <div className="flex flex-col pl-3">
@@ -55,7 +54,7 @@ const Blogpost = () => {
         )}
       </div>
 
-      <TitlePrimary text="Other Articles" />
+      {/* <TitlePrimary text="Other Articles" />
       <section className="blog-card-row container mx-auto px-20">
         <div className="flex flex-row overflow-x-scroll container-snap sm:flex-wrap justify-between">
           <div className="w-full sm:w-1/2 md:w-1/3  p-[15px]">
@@ -68,8 +67,8 @@ const Blogpost = () => {
             <BlogCard />
           </div>
         </div>
-      </section>
-      <Footer />
+      </section> */}
+      {/* <Footer /> */}
     </>
   );
 };

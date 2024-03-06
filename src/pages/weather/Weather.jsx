@@ -1,3 +1,4 @@
+// Weather.jsx
 import React, { useState, useEffect } from "react";
 import { FiSearch } from "react-icons/fi";
 import axios from "axios";
@@ -5,9 +6,12 @@ import axios from "axios";
 const Weather = () => {
   const [city, setCity] = useState("");
   const [weatherData, setWeatherData] = useState(null);
+  const [forecastData, setForecastData] = useState(null);
   const [error, setError] = useState(null);
   const [backgroundImage, setBackgroundImage] = useState("");
 
+  // const openWeatherMapApiKey = "71f6779186cc32448b4c412eea65b982";
+  // 9cc1c6365f785a0a2398e84f87199316
   const openWeatherMapApiKey = "71f6779186cc32448b4c412eea65b982";
 
   useEffect(() => {
@@ -17,16 +21,20 @@ const Weather = () => {
         async (position) => {
           const { latitude, longitude } = position.coords;
           try {
-            const response = await axios.get(
+            const weatherResponse = await axios.get(
               `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${openWeatherMapApiKey}&units=metric`
             );
-            setWeatherData(response.data);
+            setWeatherData(weatherResponse.data);
             setBackgroundImage(
-              getBackgroundImage(response.data.weather[0].icon)
+              getBackgroundImage(weatherResponse.data.weather[0].icon)
             );
             setError(null);
+
+            const forecastResponse = await axios.get(
+              `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=current,minutely,hourly&appid=${openWeatherMapApiKey}&units=metric`
+            );
+            setForecastData(forecastResponse.data);
           } catch (err) {
-            setWeatherData(null);
             setError("Weather information not available");
           }
         },
@@ -37,21 +45,23 @@ const Weather = () => {
     }
   }, []);
 
-  useEffect(() => {
-    if (weatherData) {
-      fetchWeatherForecast(weatherData.coord.lat, weatherData.coord.lon);
-    }
-  }, [weatherData]);
-
-  const fetchWeatherForecast = async (lat, lon) => {
+  const fetchWeatherData = async (cityName) => {
     try {
-      const response = await axios.get(
-        `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,hourly&appid=${openWeatherMapApiKey}&units=metric`
+      const weatherResponse = await axios.get(
+        `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${openWeatherMapApiKey}&units=metric`
       );
-      setWeatherData((prevData) => ({ ...prevData, forecast: response.data }));
+      setWeatherData(weatherResponse.data);
+      setBackgroundImage(
+        getBackgroundImage(weatherResponse.data.weather[0].icon)
+      );
       setError(null);
+
+      const forecastResponse = await axios.get(
+        `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${openWeatherMapApiKey}&units=metric`
+      );
+      setForecastData(forecastResponse.data);
     } catch (err) {
-      setError("Failed to fetch weather forecast");
+      setError("Failed to fetch weather data");
     }
   };
 
@@ -95,18 +105,21 @@ const Weather = () => {
   };
 
   const renderForecast = () => {
-    if (weatherData && weatherData.forecast && weatherData.forecast.daily) {
-      return weatherData.forecast.daily.slice(1, 8).map((day, index) => (
+    if (forecastData && forecastData.list) {
+      const dailyForecasts = forecastData.list.filter((item) =>
+        item.dt_txt.includes("12:00:00")
+      );
+      return dailyForecasts.map((forecast, index) => (
         <div key={index} className="mt-4">
           <h3 className="text-xl font-semibold mb-2">
-            {new Date(day.dt * 1000).toLocaleDateString("en-US", {
+            {new Date(forecast.dt * 1000).toLocaleDateString("en-US", {
               weekday: "long",
             })}
           </h3>
-          <p>Temperature: {day.temp.day} °C</p>
+          <p>Temperature: {forecast.main.temp} °C</p>
           <p>
-            Weather: {renderEmoji(day.weather[0].description)}{" "}
-            {day.weather[0].description}
+            Weather: {renderEmoji(forecast.weather[0].description)}{" "}
+            {forecast.weather[0].description}
           </p>
         </div>
       ));
@@ -116,7 +129,7 @@ const Weather = () => {
 
   return (
     <div
-      className="bg-cover bg-center min-h-screen flex items-center justify-center"
+      className="bg-cover bg-center min-h-screen flex items-center justify-center mx-2   mt-2"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
       <div className="bg-white bg-opacity-80 p-8 rounded-md w-full max-w-md">
@@ -131,7 +144,7 @@ const Weather = () => {
           />
           <button
             className="bg-blue-500 text-white p-2 rounded-r-md"
-            onClick={() => fetchWeatherForecast(city)}
+            onClick={() => fetchWeatherData(city)}
           >
             <FiSearch />
           </button>
