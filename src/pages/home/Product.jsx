@@ -39,8 +39,10 @@ function Product() {
     e.preventDefault();
     try {
       const formDataObj = new FormData();
-      formDataObj.append("productname", formData.productname);
-      formDataObj.append("productdetail", formData.productdetail);
+      formDataObj.append("name", formData.name);
+      formDataObj.append("description", formData.description);
+      formDataObj.append("price", formData.price);
+
       formDataObj.append("category", formData.category);
       formDataObj.append("image", formData.image);
       await axios.post("http://127.0.0.1:8000/api/products/", formDataObj);
