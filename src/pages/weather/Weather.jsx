@@ -12,7 +12,7 @@ const Weather = () => {
 
   // const openWeatherMapApiKey = "71f6779186cc32448b4c412eea65b982";
   // 9cc1c6365f785a0a2398e84f87199316
-  const openWeatherMapApiKey = "71f6779186cc32448b4c412eea65b982";
+  const openWeatherMapApiKey = "9cc1c6365f785a0a2398e84f87199316";
 
   useEffect(() => {
     // Get user's geolocation

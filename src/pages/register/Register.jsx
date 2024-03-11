@@ -42,7 +42,7 @@ const Register = () => {
     //   }),
     // });
     const result = await axios.post(
-      "http://10..5.3.253:8000/accounts/register/",
+      "http://127.0.0.1:8000/accounts/register/",
       userRegisterData,
       {
         mode: "no-cors",
