@@ -129,7 +129,7 @@ const Weather = () => {
 
   return (
     <div
-      className="bg-cover bg-center min-h-screen flex items-center justify-center mx-2   mt-2"
+      className="bg-cover bg-center min-h-screen flex items-center justify-center"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
       <div className="bg-white bg-opacity-80 p-8 rounded-md w-full max-w-md">

@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { useCart } from "../../context/CartContext";
+// import { useCart } from "../../context/CartContext";
 import ButtonPrimary from "../../components/ButtonPrimary";
 import { HiSpeakerWave } from "react-icons/hi2"; // Import speak icon
 
 const ProductDetail = () => {
   const navigate = useNavigate();
-  const { cart, dispatch } = useCart();
+  // const { cart, dispatch } = useCart();
   const [detail, setDetail] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState([]);
 

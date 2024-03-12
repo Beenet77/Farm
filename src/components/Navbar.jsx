@@ -1,20 +1,29 @@
 import { React, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../src/images/a.jpg";
+import storage from "../storage";
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+  const [isTogle, setIsTogle] = useState(true);
   const data = JSON.parse(localStorage.getItem("cartData")) || [];
 
+  function handleLogout() {
+    storage.clearToken();
+    alert("you are loged out!");
+    navigate("/");
+    window.location.reload();
+  }
+
   return (
-    <div class="px-8 shadow-xl h-full w-full">
+    <div class="px-8 h-full w-full bg-green-800 text-white">
       <nav class="top-0  w-full">
         <div class=" mx-auto py-5 flex items-center justify-between container">
           <div class="text-2xl font-medium">
             <img src={Logo} alt="logo" className="h-[55px] rounded-md" />
           </div>
           <ul class="flex space-x-10">
-            <Link to="/">
+            <Link to="/home">
               <li class="hover:bg-[rgb(56,206,189)] rounded-md ease-in duration-100 hover:text-white px-1 py-1  ">
                 Home
               </li>
@@ -37,18 +46,18 @@ const Navbar = () => {
                 Blogs
               </li>
             </Link>
-            <Link to="/marketplace">
+            {/* <Link to="/marketplace">
               <li class="hover:bg-[rgb(56,206,189)] rounded-md ease-in duration-100 hover:text-white px-1 py-1">
                 MarketPlace
               </li>
-            </Link>
+            </Link> */}
             <Link to="/expert">
               <li class="hover:bg-[rgb(56,206,189)] rounded-md ease-in duration-100 hover:text-white px-1 py-1">
                 Experts
               </li>
             </Link>
           </ul>
-          <span>
+          <span className="flex gap-10">
             <Link to="/cart">
               <div class=" flex justify-center items-center">
                 <div class="relative py-2">
@@ -75,8 +84,30 @@ const Navbar = () => {
                 </div>
               </div>
             </Link>
+            <div>
+              <img
+                className="w-14 cursor-pointer"
+                src="https://cdn-icons-png.flaticon.com/512/219/219969.png"
+                alt=""
+                onClick={() => setIsTogle(!isTogle)}
+              />
+              <div className={`${isTogle && "hidden"} list-none`}>
+                <li
+                  onClick={() => handleLogout()}
+                  className="my-2 cursor-pointer"
+                >
+                  Logout
+                </li>
+                <li
+                  className="cursor-pointer"
+                  onClick={() => navigate("/profile")}
+                >
+                  Profile
+                </li>
+              </div>
+            </div>
+            {/* <button onClick={handleLogout}>Logout</button> */}
           </span>
-          {/* <span>4</span> */}
         </div>
       </nav>
     </div>

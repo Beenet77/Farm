@@ -9,7 +9,6 @@ export let initial = {
 };
 
 export let reducer = (state, action) => {
-  //   console.log(action);
   return {
     ...state,
     [action.key]: action.payload,

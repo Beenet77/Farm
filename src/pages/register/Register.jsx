@@ -10,37 +10,13 @@ const Register = () => {
   let [state, dispatch] = useReducer(reducer, initial);
   const [userType, setUserType] = useState("Farmer");
   const navigate = useNavigate();
-  // const [password, setPassword] = useState([]);
-  // const [confirmPassword, setConfirmPassword] = useState('');
-  // const [first_name,setFirstName] = useState();
 
   const handleUserTypeChange = (event) => {
     setUserType(event.target.value);
   };
+
   let handelUserRegister = async (e) => {
-    e.preventDefault();
-    // console.log(state);
-    // return;
     const userRegisterData = { ...state };
-    console.log(userRegisterData);
-    // let result = await fetch("https://kt.esewi.com/accounts/register", {
-    //   mode: "no-cors",
-    //   method: "POST",
-    //   headers: {
-    //     "Access-Control-Allow-Origin": "*",
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     first_name: state?.first_name,
-    //     middle_name: state?.middle_name,
-    //     last_name: state?.last_name,
-    //     email: state?.email,
-    //     phone_no: state?.phone_no,
-    //     password: state?.password,
-    //     confirm_password: state?.confirm_password,
-    //     role: userType,
-    //   }),
-    // });
     const result = await axios.post(
       "http://127.0.0.1:8000/accounts/register/",
       userRegisterData,
@@ -48,21 +24,15 @@ const Register = () => {
         mode: "no-cors",
         method: "POST",
         headers: {
-          "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/json",
         },
       }
     );
-    console.log(result.data);
     if (result.data) {
-      navigate("/login");
+      navigate("/");
     }
   };
 
-  // const handleConfirmPasswordChange = (event) => {
-  //     setConfirmPassword(event.target.value);
-  // };
-  // console.log(state);
   return (
     <div
       className="bg-gradient-to-r from-black via-black to-transparent bg-cover bg-center min-h-screen"
@@ -71,7 +41,6 @@ const Register = () => {
           'url("https://images.unsplash.com/photo-1615811361523-6bd03d7748e7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1674&q=80")',
       }}
     >
-      {/* <section className="relative flex flex-wrap lg:h-screen lg:items-center bg-[#0F2B05]"> */}
       <div className="w-full px-4 py-12 sm:px-6 sm:py-16 lg:w-1/2 lg:px-8 lg:py-16">
         <div className="home_reference_section my-5">
           <Link to="/" className="cursor-pointer">
@@ -90,7 +59,7 @@ const Register = () => {
         </div>
 
         <form
-          onSubmit={handelUserRegister}
+          onSubmit={() => handelUserRegister()}
           className="mx-auto mt-8 mb-0 max-w-md space-y-4"
         >
           <div className="flex space-x-2">
@@ -268,7 +237,7 @@ const Register = () => {
           <div className="flex items-center justify-between">
             <p className="text-sm text-gray-500">
               Already have an account?&nbsp;
-              <Link to="/login" className="underline hover:font-semibold">
+              <Link to="/" className="underline hover:font-semibold">
                 Login
               </Link>
             </p>
@@ -285,7 +254,6 @@ const Register = () => {
           className="absolute inset-0 h-full w-full object-cover"
         />
       </div>
-      {/* </section> */}
     </div>
   );
 };

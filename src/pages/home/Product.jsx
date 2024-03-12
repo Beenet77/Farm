@@ -3,13 +3,16 @@ import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { CarouselDefault } from "../../components/carusel";
 
 function Product() {
   const [products, setProducts] = useState([]);
   const [cat, setCat] = useState([]);
   const [catOptions, setCatOptions] = useState([]);
+  const [catName, setCatName] = useState("Feature Products");
 
   const [showModal, setShowModal] = useState(false);
+  const [catToggle, setCatToggle] = useState(true);
   const [formData, setFormData] = useState({
     id: "",
     name: "",
@@ -110,33 +113,38 @@ function Product() {
     return chunkedArray;
   };
 
-  function handleCatClick(a) {
+  function handleCatClick(a, b) {
+    setCatToggle(!catToggle);
+    setCatName(b);
     fetchProducts(a);
   }
 
   const productChunks = chunkArray(products, 4);
 
   return (
-    <div className="min-h-[85vh] container mx-auto mt-4">
-      <div>
-        <ul className="flex justify-between">
+    <div className="min-h-[85vh] container mx-auto mt-4 p-10">
+      <div className="text-right">
+        <button onClick={() => setCatToggle(!catToggle)}>CATEGORIES</button>
+      </div>
+      <div className={`${catToggle && "hidden"}`}>
+        <ul className="text-right gap-4">
           {cat.map((el) => (
             <li
               className="cursor-pointer text-blue-500	underline underline-offset-1 uppercase"
-              onClick={() => handleCatClick(el.id)}
+              onClick={() => handleCatClick(el.id, el.product_name)}
             >
               {el.product_name}
             </li>
           ))}
         </ul>
       </div>
-      <h1 className="text-2xl font-semibold mb-4">Products</h1>
-      <button
+      <h1 className="text-2xl font-semibold mb-4">{catName.toUpperCase()}</h1>
+      {/* <button
         className="absolute top-4 left-4 bg-blue-500 text-white py-2 px-4 rounded-md"
         onClick={toggleModal}
       >
         Add Product
-      </button>
+      </button> */}
       {showModal && (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-50 z-20 flex justify-center items-center">
           <div className="bg-white p-8 rounded-lg w-96">
@@ -244,37 +252,44 @@ function Product() {
           </div>
         </div>
       )}
+      <>{/* <CarouselDefault /> */}</>
       <div>
-        {productChunks.map((chunk, index) => (
-          <div key={index} className="grid grid-cols-4 gap-4">
-            {chunk.map((product) => (
-              <div
-                key={product.id}
-                className=" bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition duration-300"
-              >
-                <Link
-                  to={`/products/${product.id}`}
-                  className="group block overflow-hidden"
+        {productChunks.length > 0 ? (
+          productChunks.map((chunk, index) => (
+            <div key={index} className="grid grid-cols-4 gap-4 mb-4">
+              {chunk.map((product) => (
+                <div
+                  key={product.id}
+                  className="  rounded-lg p-4 shadow-md hover:shadow-lg transition duration-300 bg-white"
                 >
-                  <img
-                    src={product?.image}
-                    alt={product.title}
-                    className="w-full h-[230px] object-cover transition duration-500 group-hover:scale-105 sm:w-[455px]"
-                  />
-                  <div className="relative bg-white pt-3">
-                    <h2 className="text-lg font-semibold mt-2 group-hover:underline group-hover:underline-offset-4">
-                      {product.name}
-                    </h2>
-                    {/* <p className="text-gray-600">{product.category}</p> */}
-                    <p className="text-lg font-semibold text-green-500 mt-2">
-                      रू {product.price}
-                    </p>
-                  </div>
-                </Link>
-              </div>
-            ))}
+                  <Link
+                    to={`/products/${product.id}`}
+                    className="group block overflow-hidden"
+                  >
+                    <img
+                      src={product?.image}
+                      alt={product.title}
+                      className="w-full h-[230px] object-cover transition duration-500 group-hover:scale-105 sm:w-[455px]"
+                    />
+                    <div className="relative bg-white pt-3">
+                      <h2 className="text-lg font-semibold mt-2 group-hover:underline group-hover:underline-offset-4">
+                        {product.name}
+                      </h2>
+                      {/* <p className="text-gray-600">{product.category}</p> */}
+                      <p className="text-lg font-semibold text-green-500 mt-2">
+                        रू {product.price}
+                      </p>
+                    </div>
+                  </Link>
+                </div>
+              ))}
+            </div>
+          ))
+        ) : (
+          <div className="min-h-[50vh] flex justify-center items-center">
+            Opps! no product found!
           </div>
-        ))}
+        )}
       </div>
     </div>
   );
