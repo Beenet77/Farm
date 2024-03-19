@@ -30,6 +30,7 @@ const Blog = () => {
           <div className="w-full flex justify-center sm:w-1/2 md:w-1/3 p-[15px]">
             <BlogCard
               image={blogpost.image}
+              video={blogpost.video}
               title={truncateText(blogpost.title, 50)}
               author={blogpost.author}
               date={blogpost.created_at}

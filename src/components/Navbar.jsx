@@ -15,6 +15,13 @@ const Navbar = () => {
     window.location.reload();
   }
 
+  function isNavSelected(string) {
+    let url = window.location.href;
+    if (url.includes(string)) {
+      return "bg-[rgb(56,206,189)]";
+    }
+  }
+
   return (
     <div class="px-8 h-full w-full bg-green-800 text-white">
       <nav class="top-0  w-full">
@@ -24,36 +31,70 @@ const Navbar = () => {
           </div>
           <ul class="flex space-x-10">
             <Link to="/home">
-              <li class="hover:bg-[rgb(56,206,189)] rounded-md ease-in duration-100 hover:text-white px-1 py-1  ">
+              <li
+                class={`hover:bg-[rgb(56,206,189)] ${isNavSelected(
+                  "home"
+                )} rounded-md ease-in duration-100 hover:text-white px-1 py-1`}
+              >
                 Home
               </li>
             </Link>
 
             <Link to="/feedback">
-              <li class="hover:bg-[rgb(56,206,189)] rounded-md ease-in duration-100 hover:text-white px-1 py-1">
+              <li
+                class={`hover:bg-[rgb(56,206,189)] ${isNavSelected(
+                  "feedback"
+                )} rounded-md ease-in duration-100 hover:text-white px-1 py-1`}
+              >
                 Feedback
               </li>
             </Link>
 
-            <Link to="/weather ">
-              <li class="hover:bg-[rgb(56,206,189)] rounded-md ease-in duration-100 hover:text-white px-1 py-1">
+            <Link to="/weather">
+              <li
+                class={`hover:bg-[rgb(56,206,189)] ${isNavSelected(
+                  "weather"
+                )} rounded-md ease-in duration-100 hover:text-white px-1 py-1`}
+              >
                 Weather
               </li>
             </Link>
 
             <Link to="/blogs">
-              <li class="hover:bg-[rgb(56,206,189)] rounded-md ease-in duration-100 hover:text-white px-1 py-1">
+              <li
+                class={`hover:bg-[rgb(56,206,189)] ${isNavSelected(
+                  "blogs"
+                )} rounded-md ease-in duration-100 hover:text-white px-1 py-1`}
+              >
                 Blogs
               </li>
             </Link>
-            {/* <Link to="/marketplace">
-              <li class="hover:bg-[rgb(56,206,189)] rounded-md ease-in duration-100 hover:text-white px-1 py-1">
-                MarketPlace
+            <Link to="/notice">
+              <li
+                class={`hover:bg-[rgb(56,206,189)] ${isNavSelected(
+                  "notice"
+                )} rounded-md ease-in duration-100 hover:text-white px-1 py-1`}
+              >
+                Notice
               </li>
-            </Link> */}
+            </Link>
             <Link to="/expert">
-              <li class="hover:bg-[rgb(56,206,189)] rounded-md ease-in duration-100 hover:text-white px-1 py-1">
+              <li
+                class={`hover:bg-[rgb(56,206,189)] ${isNavSelected(
+                  "expert"
+                )} rounded-md ease-in duration-100 hover:text-white px-1 py-1`}
+              >
                 Experts
+              </li>
+            </Link>
+
+            <Link to="/marketplace">
+              <li
+                class={`hover:bg-[rgb(56,206,189)] ${isNavSelected(
+                  "marketplace"
+                )} rounded-md ease-in duration-100 hover:text-white px-1 py-1`}
+              >
+                MarketPlace
               </li>
             </Link>
           </ul>

@@ -62,15 +62,17 @@ const Blogpost = () => {
                   <div className="author_image_container flex items-center">
                     <img src={blogpost.image} alt="" />
                   </div>
-                  <div className="flex flex-col pl-3">
-                    <div className="author_name">{blogpost.author}</div>
-                    <div className="date mt-1">
-                      {blogpost.date} . {blogpost.time}
+                  <div className="flex flex-col justify-between pl-3">
+                    <div className="author_name text-4xl">
+                      लेखक: {blogpost.author}
                     </div>
                   </div>
                 </div>
               </div>
             </span>
+            {blogpost.video && (
+              <video controls className="w-full my-4" src={blogpost.video} />
+            )}
             <section className="font_cabin">{blogpost.content}</section>
           </>
         )}

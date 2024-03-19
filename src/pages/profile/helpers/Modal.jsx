@@ -14,11 +14,12 @@ export default function Modal({ data, ...props }) {
 
   const handleSubmit = async (e) => {
     let url = "http://127.0.0.1:8000/api/products/";
+
     if (data.id) {
-      url += data.id;
+      url = "http://127.0.0.1:8000/api/products/" + data.id + "/";
     }
-    e.preventDefault();
     try {
+      console.log("4567890");
       const formDataObj = new FormData();
       formDataObj.append("name", formData.name);
       formDataObj.append("description", formData.description);
@@ -37,7 +38,7 @@ export default function Modal({ data, ...props }) {
       });
       // fetchProducts();
     } catch (error) {
-      console.error("Error adding product:", error);
+      console.error("Error adding product: dfghgjhgdfghyuyhgfd", error);
     }
   };
 
@@ -61,7 +62,7 @@ export default function Modal({ data, ...props }) {
         <div className="fixed inset-0 bg-gray-800 bg-opacity-50 z-20 flex justify-center items-center">
           <div className="bg-white p-8 rounded-lg w-96">
             <h2 className="text-2xl font-semibold mb-4">Add Product</h2>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={() => handleSubmit()}>
               <div className="mb-4">
                 <label
                   htmlFor="name"

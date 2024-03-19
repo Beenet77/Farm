@@ -12,6 +12,7 @@ const BlogCard = (props) => {
           src={props?.image}
           alt="blogpost"
         />
+
         <section className="py-[10px]">
           <Link to="/">
             <h5 className="mb-2 text-base font-semibold tracking-tight text-gray-900">

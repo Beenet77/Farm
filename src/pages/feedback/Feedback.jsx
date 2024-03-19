@@ -5,7 +5,7 @@ import ButtonPrimary from "../../components/ButtonPrimary";
 const Feedback = () => {
   return (
     <>
-      <div className="min-h-[73vh] w-full ">
+      <div className="min-h-[85vh] container mx-auto mt-4 p-10">
         <section className="text-gray-600 body-font relative">
           <div className="justify-center container px-68 py-10 flex  ">
             <form className="lg:w-1/3 md:w-1/2 bg-white rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0 relative z-10 shadow-md ">

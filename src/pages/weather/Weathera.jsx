@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { FiSearch } from "react-icons/fi";
 import axios from "axios";
 
-const Weather = () => {
+const Weathera = () => {
   const [city, setCity] = useState("");
   const [weatherData, setWeatherData] = useState(null);
   const [forecastData, setForecastData] = useState(null);
@@ -175,4 +175,4 @@ const Weather = () => {
   );
 };
 
-export default Weather;
+export default Weathera;

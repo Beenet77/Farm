@@ -6,11 +6,14 @@ import Home from "../pages/home/Home";
 import ProductDetail from "../pages/home/ProductDetail";
 import Mentors from "../pages/expert/Mentors";
 import Weather from "../pages/weather/Weathera";
-// import MarketPlace from "../pages/marketplace/MarketPlace";
 import AppLayout from "../layout/AppLayout";
 import { Suspense } from "react";
 import Cart from "../pages/cart/Cart";
 import Profile from "../pages/profile/Profile";
+import Notice from "../components/Notice";
+import MarketPlace from "../pages/marketplace/Marketplace";
+import Order from "../pages/order /Order";
+import Weathera from "../pages/weather/Weathera";
 
 const AppUser = () => {
   return (
@@ -45,7 +48,7 @@ export const privateRoutes = createBrowserRouter([
         element: <Feedback />,
       },
       {
-        path: "/products/:productId",
+        path: "/products",
         element: <ProductDetail />,
       },
       {
@@ -54,7 +57,7 @@ export const privateRoutes = createBrowserRouter([
       },
       {
         path: "/weather",
-        element: <Weather />,
+        element: <Weathera />,
       },
       {
         path: "/cart",
@@ -63,6 +66,18 @@ export const privateRoutes = createBrowserRouter([
       {
         path: "/profile",
         element: <Profile />,
+      },
+      {
+        path: "/notice",
+        element: <Notice />,
+      },
+      {
+        path: "/marketplace",
+        element: <MarketPlace />,
+      },
+      {
+        path: "/order",
+        element: <Order />,
       },
     ],
   },

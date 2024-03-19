@@ -1,37 +1,35 @@
-import { React, useContext, useState } from "react";
+import { React } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ButtonPrimary from "../../components/ButtonPrimary";
 import Logo from "../../images/b.jpg";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import UserContext from "../../context/userContext";
 import storage from "../../storage";
+import { toast } from "react-toastify";
+import { LOGIN_SUCCESS, SOMETHING_WENT_WRING } from "../../constants/Constants";
+import { FARM_URL } from "../../apis/Api";
 
 const Login = () => {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
-  // const { setUser } = useContext(UserContext);
-
-  // console.log(user, "sdfsdgdfgdfg");
 
   const onSubmit = async (data) => {
-    const result = await axios.post(
-      "http://127.0.0.1:8000/accounts/login/",
-      data,
-      {
+    try {
+      const result = await axios.post(FARM_URL.login, data, {
         mode: "no-cors",
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+      });
+      if (result.data) {
+        storage.setToken(result.data.access);
+        navigate("/home");
+        toast.success(LOGIN_SUCCESS);
+        window.location.reload(true);
       }
-    );
-    if (result.data) {
-      // console.log(result.data);
-      // setUser(true);
-      storage.setToken(result.data.access);
-      navigate("/home");
-      window.location.reload(true);
+    } catch (errr) {
+      toast.error(SOMETHING_WENT_WRING);
     }
   };
 

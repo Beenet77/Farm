@@ -1,35 +1,54 @@
-import React, { useReducer, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import Logo from "../../images/b.jpg";
 import BackgroundImage from "../../images/a.jpg";
 import ButtonPrimary from "../../components/ButtonPrimary";
-import { initial, reducer } from "./reducer";
 import axios from "axios";
+import { toast } from "react-toastify";
+import {
+  SIGNUP_SUCCESS,
+  SOMETHING_WENT_WRING,
+} from "../../constants/Constants";
+import { FARM_URL } from "../../apis/Api";
+
 const Register = () => {
-  let [state, dispatch] = useReducer(reducer, initial);
-  const [userType, setUserType] = useState("Farmer");
+  const [formData, setFormData] = useState({
+    first_name: "",
+    middle_name: "",
+    last_name: "",
+    email: "",
+    phone_no: "",
+    password: "",
+    confirm_password: "",
+  });
   const navigate = useNavigate();
 
-  const handleUserTypeChange = (event) => {
-    setUserType(event.target.value);
+  const handleUserTypeChange = (e) => {
+    setFormData({ ...formData, userType: e.target.value });
   };
 
-  let handelUserRegister = async (e) => {
-    const userRegisterData = { ...state };
-    const result = await axios.post(
-      "http://127.0.0.1:8000/accounts/register/",
-      userRegisterData,
-      {
+  const handlegenderChange = (e) => {
+    setFormData({ ...formData, gender: e.target.value });
+  };
+
+  let handelUserRegister = async () => {
+    try {
+      const result = await axios.post(FARM_URL.register, formData, {
         mode: "no-cors",
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+      });
+      if (result.data) {
+        toast.success(SIGNUP_SUCCESS);
+        navigate("/");
+      } else {
+        toast.error(JSON.stringify(result.data));
       }
-    );
-    if (result.data) {
-      navigate("/");
+    } catch (err) {
+      toast.error(SOMETHING_WENT_WRING);
     }
   };
 
@@ -58,8 +77,8 @@ const Register = () => {
           </Link>
         </div>
 
-        <form
-          onSubmit={() => handelUserRegister()}
+        <div
+          // onSubmit={() => handelUserRegister()}
           className="mx-auto mt-8 mb-0 max-w-md space-y-4"
         >
           <div className="flex space-x-2">
@@ -74,12 +93,13 @@ const Register = () => {
                   name="first_name"
                   className="w-full rounded border-gray-200 p-4 pr-12 text-sm shadow-sm"
                   placeholder="First Name"
-                  value={state.first_name}
+                  // value={state.first_name}
                   onChange={(e) => {
-                    dispatch({
-                      key: e.target.name,
-                      payload: e.target.value,
-                    });
+                    setFormData({ ...formData, first_name: e.target.value });
+                    // dispatch({
+                    //   key: e.target.name,
+                    //   payload: e.target.value,
+                    // });
                   }}
                 />
               </div>
@@ -95,12 +115,13 @@ const Register = () => {
                   name="middle_name"
                   className="w-full rounded border-gray-200 p-4 pr-12 text-sm shadow-sm"
                   placeholder="Middle Name"
-                  value={state.middle_name}
+                  // value={state.middle_name}
                   onChange={(e) => {
-                    dispatch({
-                      key: e.target.name,
-                      payload: e.target.value,
-                    });
+                    setFormData({ ...formData, middle_name: e.target.value });
+                    // dispatch({
+                    //   key: e.target.name,
+                    //   payload: e.target.value,
+                    // });
                   }}
                 />
               </div>
@@ -118,12 +139,13 @@ const Register = () => {
                 name="last_name"
                 className="w-full rounded border-gray-200 p-4 pr-12 text-sm shadow-sm"
                 placeholder="Last Name"
-                value={state.last_name}
+                // value={state.last_name}
                 onChange={(e) => {
-                  dispatch({
-                    key: e.target.name,
-                    payload: e.target.value,
-                  });
+                  setFormData({ ...formData, last_name: e.target.value });
+                  // dispatch({
+                  //   key: e.target.name,
+                  //   payload: e.target.value,
+                  // });
                 }}
               />
             </div>
@@ -140,12 +162,13 @@ const Register = () => {
                 name="email"
                 className="w-full rounded border-gray-200 p-4 pr-12 text-sm shadow-sm"
                 placeholder="Email"
-                value={state.email}
+                // value={state.email}
                 onChange={(e) => {
-                  dispatch({
-                    key: e.target.name,
-                    payload: e.target.value,
-                  });
+                  setFormData({ ...formData, email: e.target.value });
+                  // dispatch({
+                  //   key: e.target.name,
+                  //   payload: e.target.value,
+                  // });
                 }}
               />
             </div>
@@ -161,12 +184,13 @@ const Register = () => {
                 name="phone_no"
                 className="w-full rounded border-gray-200 p-4 pr-12 text-sm shadow-sm"
                 placeholder="Contact Number"
-                value={state.phone_no}
+                // value={state.phone_no}
                 onChange={(e) => {
-                  dispatch({
-                    key: e.target.name,
-                    payload: e.target.value,
-                  });
+                  setFormData({ ...formData, phone_no: e.target.value });
+                  // dispatch({
+                  //   key: e.target.name,
+                  //   payload: e.target.value,
+                  // });
                 }}
               />
             </div>
@@ -183,18 +207,19 @@ const Register = () => {
                 name="password"
                 className="w-full rounded border-gray-200 p-4 pr-12 text-sm shadow-sm"
                 placeholder="Password"
-                value={state.password}
+                // value={state.password}
                 onChange={(e) => {
-                  dispatch({
-                    key: e.target.name,
-                    payload: e.target.value,
-                  });
+                  setFormData({ ...formData, password: e.target.value });
+                  // dispatch({
+                  //   key: e.target.name,
+                  //   payload: e.target.value,
+                  // });
                 }}
               />
             </div>
           </div>
 
-          <div>
+          {/* <div>
             <label htmlFor="confirm_password" className="sr-only">
               Confirm Password
             </label>
@@ -214,6 +239,25 @@ const Register = () => {
                 }}
               />
             </div>
+          </div> */}
+
+          <div>
+            <label htmlFor="gender" className="sr-only">
+              Gender
+            </label>
+            <div className="relative">
+              <select
+                id="gender"
+                name="gender"
+                className="w-full rounded border-gray-200 p-4 pr-12 text-sm shadow-sm"
+                // value={gender}
+                onChange={handlegenderChange}
+              >
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
           </div>
 
           <div>
@@ -225,11 +269,11 @@ const Register = () => {
                 id="userType"
                 name="userType"
                 className="w-full rounded border-gray-200 p-4 pr-12 text-sm shadow-sm"
-                value={userType}
+                // value={userType}
                 onChange={handleUserTypeChange}
               >
-                <option value="Farmer">Farmer</option>
-                <option value="Vendor">Vendor</option>
+                <option value="Farmer">Buyer</option>
+                <option value="Vendor">Seller</option>
               </select>
             </div>
           </div>
@@ -242,9 +286,9 @@ const Register = () => {
               </Link>
             </p>
 
-            <ButtonPrimary text="Signup" />
+            <ButtonPrimary onClick={() => handelUserRegister()} text="Signup" />
           </div>
-        </form>
+        </div>
       </div>
 
       <div className="relative h-64 w-full sm:h-96 lg:h-full lg:w-1/2 bg-[#0F2B05]">

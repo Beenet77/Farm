@@ -10,17 +10,34 @@ const ProductDetail = () => {
   // const { cart, dispatch } = useCart();
   const [detail, setDetail] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState([]);
-
+  const url = window.location.href;
+  console.log("url", url);
+  console.log(url.includes("marketplace"));
   const [speaking, setSpeaking] = useState(false); // State to track speaking status
   const params = useParams();
 
+  function getUrlParam(paramName) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(paramName);
+  }
+
+  function getUrlParamName() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.keys().next().value;
+  }
+
   const getDetails = () => {
+    let myurl = "http://127.0.0.1:8000/api/";
+    if (url.includes("marketplace")) {
+      myurl = myurl + "marketplaceproducts/";
+    }
+    if (url.includes("government")) {
+      myurl = myurl + "governmentproducts/";
+    }
     try {
-      axios
-        .get(`http://127.0.0.1:8000/api/products/${params.productId}`)
-        .then((res) => {
-          setDetail(res.data);
-        });
+      axios.get(myurl + getUrlParam(getUrlParamName())).then((res) => {
+        setDetail(res.data);
+      });
     } catch (error) {
       console.error("Error fetching product details:", error);
     }
@@ -28,7 +45,7 @@ const ProductDetail = () => {
 
   useEffect(() => {
     getDetails(params);
-  }, [params]);
+  }, [url]);
 
   useEffect(() => {
     detail && fetchRelatedProducts(detail);
@@ -36,10 +53,19 @@ const ProductDetail = () => {
 
   const fetchRelatedProducts = async (a) => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/api/products/");
+      let myurl = "http://127.0.0.1:8000/api/";
+      if (url.includes("marketplace")) {
+        myurl = myurl + "marketplaceproducts/";
+      }
+      if (url.includes("government")) {
+        myurl = myurl + "governmentproducts/";
+      }
+      const response = await axios.get(myurl);
       if (a) {
         setRelatedProducts(
-          response.data.filter((el) => el.category === a.category)
+          response.data.filter(
+            (el) => el.category === a.category && a.id !== el.id
+          )
         );
       }
     } catch (error) {
@@ -69,7 +95,7 @@ const ProductDetail = () => {
 
   function addToCartHandler(data) {
     if (Boolean(previousCartData.find((el) => el.id === data.id))) {
-      alert(" Already added to cart");
+      alert("Already added to cart");
     }
     if (
       data?.created_at &&
@@ -130,7 +156,9 @@ const ProductDetail = () => {
                   className=" bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition duration-300"
                 >
                   <Link
-                    to={`/products/${product.id}`}
+                    to={`/products${
+                      getUrlParamName() ? "?marketplace=" : "?government="
+                    }${product.id}`}
                     className="group block overflow-hidden"
                   >
                     <img

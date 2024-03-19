@@ -1,6 +1,8 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Modal from "./Modal";
+import { jwtDecode } from "jwt-decode";
+import { FARM_URL } from "../../../apis/Api";
 
 export const MyProducts = ({ catOptions }) => {
   const [data, setData] = useState(null);
@@ -9,7 +11,7 @@ export const MyProducts = ({ catOptions }) => {
 
   const fetchProducts = async (catid) => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/api/products/");
+      const response = await axios.get(FARM_URL.marketplace);
       if (catid) {
         setProducts(response.data.filter((el) => el.category === catid));
       } else {
@@ -28,6 +30,8 @@ export const MyProducts = ({ catOptions }) => {
     setShowModal(true);
     setData(a);
   };
+  const token = localStorage.getItem("farm_token");
+  const decoded = jwtDecode(token);
 
   return (
     <div>
@@ -50,7 +54,7 @@ export const MyProducts = ({ catOptions }) => {
                 <div>
                   <p className="text-gray-600 ">{item.name}</p>
                   <p className="text-gray-600">Rs. {item.price}</p>
-                  <p className="text-gray-600">Rs. {item.description}</p>
+                  <p className="text-gray-600">{item.description}</p>
                   <button
                     // onClick={() => removeFromCartHandler(item.id)}
                     className="text-blackpx-2 py-1 rounded-md mt-2"
@@ -60,13 +64,17 @@ export const MyProducts = ({ catOptions }) => {
                 </div>
               </div>
               <div className="flex items-center mb-4 ">
-                <button
-                  type="button"
-                  onClick={() => handleEditClick(item)}
-                  className="border bg-green-800 border-gray-300 rounded-md px-2 py-1 mt-2 mx-2 w-20 text-white"
-                >
-                  Edit
-                </button>
+                {decoded.user_id === 3 ? (
+                  <button
+                    type="button"
+                    onClick={() => handleEditClick(item)}
+                    className="border bg-green-800 border-gray-300 rounded-md px-2 py-1 mt-2 mx-2 w-20 text-white"
+                  >
+                    Edit
+                  </button>
+                ) : (
+                  ""
+                )}
               </div>
             </div>
             <hr />

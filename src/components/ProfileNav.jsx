@@ -1,6 +1,8 @@
 import React from "react";
 import { Navbar, Typography } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+import storage from "../storage";
 
 export function ProfileNav({ handleOpenModalClick, setTab, tab }) {
   const navList = (
@@ -85,13 +87,19 @@ export function ProfileNav({ handleOpenModalClick, setTab, tab }) {
       </Typography>
     </ul>
   );
+  const token = storage.getToken();
+  // console.log(token);
+
+  const decoded = jwtDecode(token);
+  console.log(decoded);
 
   return (
     <Navbar className="mx-auto  p-2">
       <div className="container mx-auto flex items-center justify-between text-blue-gray-900">
         <div className="hidden lg:block">{navList}</div>
+        {/* {decoded.user_id === 3 ? ( */}
         <button
-          className="bg-green-800 text-white py-2 px-4 mr-3 rounded-md"
+          className="bg-green-800 text-white py-2 px-4  rounded-md"
           onClick={() => handleOpenModalClick()}
         >
           + Add Product
