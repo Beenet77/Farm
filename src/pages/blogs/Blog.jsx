@@ -10,7 +10,6 @@ const Blog = () => {
       const res = await fetch("http://127.0.0.1:8000/blog/posts");
       const data = await res.json();
       setBlogposts(data);
-      console.log(data);
     };
     fetchBlogposts();
   }, []);

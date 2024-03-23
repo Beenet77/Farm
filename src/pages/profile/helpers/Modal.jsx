@@ -1,6 +1,8 @@
 import Select from "react-select";
 import axios from "axios";
 import { useState } from "react";
+import { jwtDecode } from "jwt-decode";
+import storage from "../../../storage";
 
 export default function Modal({ data, ...props }) {
   const [formData, setFormData] = useState({
@@ -11,21 +13,23 @@ export default function Modal({ data, ...props }) {
     category: "",
     image: null,
   });
+  const token = storage.getToken();
 
+  const decoded = jwtDecode(token);
   const handleSubmit = async (e) => {
-    let url = "http://127.0.0.1:8000/api/products/";
+    let url = "http://127.0.0.1:8000/api/marketplaceproducts/";
 
-    if (data.id) {
-      url = "http://127.0.0.1:8000/api/products/" + data.id + "/";
-    }
+    // if (data.id) {
+    //   url = "http://127.0.0.1:8000/api/marketplaceproducts/" + data.id + "/";
+    // }
     try {
-      console.log("4567890");
       const formDataObj = new FormData();
       formDataObj.append("name", formData.name);
       formDataObj.append("description", formData.description);
       formDataObj.append("price", formData.price);
       formDataObj.append("category", formData.category);
       formDataObj.append("image", formData.image);
+      formDataObj.append("created_by", decoded.user_id);
       await axios.post(url, formDataObj);
       props.setShowModal(false);
       setFormData({
@@ -36,13 +40,11 @@ export default function Modal({ data, ...props }) {
         category: "",
         image: null,
       });
-      // fetchProducts();
+      window.location.reload(true);
     } catch (error) {
       console.error("Error adding product: dfghgjhgdfghyuyhgfd", error);
     }
   };
-
-  // console.log(props.catOptions);
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -62,7 +64,7 @@ export default function Modal({ data, ...props }) {
         <div className="fixed inset-0 bg-gray-800 bg-opacity-50 z-20 flex justify-center items-center">
           <div className="bg-white p-8 rounded-lg w-96">
             <h2 className="text-2xl font-semibold mb-4">Add Product</h2>
-            <form onSubmit={() => handleSubmit()}>
+            <form>
               <div className="mb-4">
                 <label
                   htmlFor="name"
@@ -74,7 +76,7 @@ export default function Modal({ data, ...props }) {
                   type="text"
                   id="name"
                   name="name"
-                  value={data?.name}
+                  defaultValue={data?.name}
                   onChange={handleInputChange}
                   className="mt-1 p-2 border rounded-md w-full focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                   required
@@ -90,7 +92,7 @@ export default function Modal({ data, ...props }) {
                 <textarea
                   id="description"
                   name="description"
-                  value={data?.description}
+                  defaultValue={data?.description}
                   onChange={handleInputChange}
                   className="mt-1 p-2 border rounded-md w-full focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                   required
@@ -106,7 +108,7 @@ export default function Modal({ data, ...props }) {
                 <textarea
                   id="price"
                   name="price"
-                  value={data?.price}
+                  defaultValue={data?.price}
                   onChange={handleInputChange}
                   className="mt-1 p-2 border rounded-md w-full focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                   required
@@ -149,7 +151,8 @@ export default function Modal({ data, ...props }) {
                   Cancel
                 </button>
                 <button
-                  type="submit"
+                  onClick={() => handleSubmit()}
+                  type="button"
                   className="bg-blue-500 text-white py-2 px-4 rounded-md"
                 >
                   Add Product

@@ -1,20 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import axios from "axios";
-// import { useCart } from "../../context/CartContext";
 import ButtonPrimary from "../../components/ButtonPrimary";
 import { HiSpeakerWave } from "react-icons/hi2"; // Import speak icon
+// import { useSpeechSynthesis } from "react-speech-kit";
 
 const ProductDetail = () => {
-  const navigate = useNavigate();
-  // const { cart, dispatch } = useCart();
   const [detail, setDetail] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState([]);
-  const url = window.location.href;
-  console.log("url", url);
-  console.log(url.includes("marketplace"));
-  const [speaking, setSpeaking] = useState(false); // State to track speaking status
+  const [recommendedProducts, setRecommendedProducts] = useState([]);
   const params = useParams();
+  const synth = window.speechSynthesis;
 
   function getUrlParam(paramName) {
     const urlParams = new URLSearchParams(window.location.search);
@@ -28,10 +24,10 @@ const ProductDetail = () => {
 
   const getDetails = () => {
     let myurl = "http://127.0.0.1:8000/api/";
-    if (url.includes("marketplace")) {
+    if (window.location.href.includes("marketplace")) {
       myurl = myurl + "marketplaceproducts/";
     }
-    if (url.includes("government")) {
+    if (window.location.href.includes("government")) {
       myurl = myurl + "governmentproducts/";
     }
     try {
@@ -45,19 +41,33 @@ const ProductDetail = () => {
 
   useEffect(() => {
     getDetails(params);
-  }, [url]);
+  }, [getUrlParam(getUrlParamName())]);
 
   useEffect(() => {
     detail && fetchRelatedProducts(detail);
   }, [detail]);
 
+  useEffect(() => {
+    fetchRecommendedProducts();
+  }, []);
+
+  const fetchRecommendedProducts = async () => {
+    try {
+      let myurl = "http://127.0.0.1:8000/api/recommended-products";
+      const response = await axios.get(myurl);
+      setRecommendedProducts(response.data);
+    } catch (error) {
+      console.error("Error fetching recommended products:", error);
+    }
+  };
+
   const fetchRelatedProducts = async (a) => {
     try {
       let myurl = "http://127.0.0.1:8000/api/";
-      if (url.includes("marketplace")) {
+      if (window.location.href.includes("marketplace")) {
         myurl = myurl + "marketplaceproducts/";
       }
-      if (url.includes("government")) {
+      if (window.location.href.includes("government")) {
         myurl = myurl + "governmentproducts/";
       }
       const response = await axios.get(myurl);
@@ -73,37 +83,50 @@ const ProductDetail = () => {
     }
   };
 
+  // const speak = async (audioUrl) => {
+  //   try {
+  //     // Fetch the audio file
+  //     const response = await axios.get(audioUrl, { responseType: "blob" });
+  //     const blob = new Blob([response.data], { type: "audio/mpeg" });
+
+  //     // Create an audio element
+  //     const audio = new Audio(URL.createObjectURL(blob));
+
+  //     // Play the audio
+  //     audio.play();
+  //   } catch (error) {
+  //     console.error("Error playing audio:", error);
+  //   }
+  // };
   const speak = (text) => {
-    // Create a new speech synthesis instance
-    const synth = window.speechSynthesis;
+    if (synth.speaking) {
+      console.error("Already speaking...");
+      return;
+    }
     const utterance = new SpeechSynthesisUtterance(text);
-
-    // Start speaking
+    utterance.voice = synth
+      .getVoices()
+      .find(
+        (voice) =>
+          voice.name === "Microsoft Sagar Online (Natural) - Nepali (Nepal)"
+      );
     synth.speak(utterance);
-
-    // Set speaking state to true
-    setSpeaking(true);
-
-    // Handle end of speaking
-    utterance.onend = () => {
-      // Set speaking state to false
-      setSpeaking(false);
-    };
   };
+  // const { speak } = useSpeechSynthesis();
 
   const previousCartData = JSON.parse(localStorage.getItem("cartData")) || [];
 
   function addToCartHandler(data) {
-    if (Boolean(previousCartData.find((el) => el.id === data.id))) {
+    if (Boolean(previousCartData.find((el) => el.uuid === data.uuid))) {
       alert("Already added to cart");
     }
     if (
       data?.created_at &&
-      !Boolean(previousCartData.find((el) => el.id === data.id))
+      !Boolean(previousCartData.find((el) => el.uuid === data.uuid))
     ) {
       let cartData = [data, ...previousCartData];
       localStorage.setItem("cartData", JSON.stringify(cartData));
-      alert("product is added to cart");
+      alert("Product is added to cart");
       window.location.reload(true);
     }
   }
@@ -131,12 +154,20 @@ const ProductDetail = () => {
                   className="ml-2 cursor-pointer size-8"
                   onClick={() => speak(`नाम ${detail?.name}`)}
                 />
+                {/* <HiSpeakerWave
+                  className="ml-2 cursor-pointer size-8"
+                  onClick={() =>
+                    speak(
+                      `http://127.0.0.1:8000/media/product_audio/${detail?.id}_ne.mp3`
+                    )
+                  }
+                /> */}
               </h1>
               <p>
                 {detail?.description}
                 <HiSpeakerWave
                   className="ml-2 cursor-pointer size-8"
-                  onClick={() => speak(`विवरण${detail?.description}`)}
+                  onClick={() => speak(`विवरण ${detail?.description}`)}
                 />
               </p>
               <ButtonPrimary
@@ -170,7 +201,6 @@ const ProductDetail = () => {
                       <h2 className="text-lg font-semibold mt-2 group-hover:underline group-hover:underline-offset-4">
                         {product.name}
                       </h2>
-                      {/* <p className="text-gray-600">{product.category}</p> */}
                       <p className="text-lg font-semibold text-green-500 mt-2">
                         रू {product.price}
                       </p>
@@ -179,6 +209,37 @@ const ProductDetail = () => {
                 </div>
               ))}
             </div>
+          </div>
+
+          <h3>Recommended Products</h3>
+          <div className="grid grid-cols-4 gap-4">
+            {recommendedProducts.map((product) => (
+              <div
+                key={product.id}
+                className=" bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition duration-300"
+              >
+                <Link
+                  to={`/products${
+                    getUrlParamName() ? "?marketplace=" : "?government="
+                  }${product.id}`}
+                  className="group block overflow-hidden"
+                >
+                  <img
+                    src={product?.image}
+                    alt={product.title}
+                    className="w-full h-[230px] object-cover transition duration-500 group-hover:scale-105 sm:w-[455px]"
+                  />
+                  <div className="relative bg-white pt-3">
+                    <h2 className="text-lg font-semibold mt-2 group-hover:underline group-hover:underline-offset-4">
+                      {product.name}
+                    </h2>
+                    <p className="text-lg font-semibold text-green-500 mt-2">
+                      रू {product.price}
+                    </p>
+                  </div>
+                </Link>
+              </div>
+            ))}
           </div>
         </>
       ) : (

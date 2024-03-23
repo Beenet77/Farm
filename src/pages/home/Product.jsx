@@ -6,7 +6,7 @@ import axios from "axios";
 function Product(props) {
   const [products, setProducts] = useState([]);
   const [cat, setCat] = useState([]);
-  const [catName, setCatName] = useState("Government Products");
+  const [catName, setCatName] = useState("Products");
 
   const [catToggle, setCatToggle] = useState(true);
 

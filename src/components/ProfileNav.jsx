@@ -1,8 +1,6 @@
 import React from "react";
 import { Navbar, Typography } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
-import { jwtDecode } from "jwt-decode";
-import storage from "../storage";
 
 export function ProfileNav({ handleOpenModalClick, setTab, tab }) {
   const navList = (
@@ -87,11 +85,6 @@ export function ProfileNav({ handleOpenModalClick, setTab, tab }) {
       </Typography>
     </ul>
   );
-  const token = storage.getToken();
-  // console.log(token);
-
-  const decoded = jwtDecode(token);
-  console.log(decoded);
 
   return (
     <Navbar className="mx-auto  p-2">

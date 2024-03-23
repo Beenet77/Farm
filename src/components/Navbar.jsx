@@ -1,12 +1,30 @@
-import { React, useState } from "react";
+import { React, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../src/images/a.jpg";
 import storage from "../storage";
+import { jwtDecode } from "jwt-decode";
+import axios from "axios";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const [isTogle, setIsTogle] = useState(true);
+  const [users, setUsers] = useState();
+  const [user, setUser] = useState();
   const data = JSON.parse(localStorage.getItem("cartData")) || [];
+
+  const fetchUsers = async () => {
+    try {
+      const response = await axios.get("http://127.0.0.1:8000/accounts/users/");
+      setUsers(response.data);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
+
+  const token = storage.getToken();
+
+  const decoded = jwtDecode(token);
+  console.log("decoded token", decoded);
 
   function handleLogout() {
     storage.clearToken();
@@ -14,7 +32,16 @@ const Navbar = () => {
     navigate("/");
     window.location.reload();
   }
+  const findUser = () => {
+    let u = users?.find((u) => u.email === decoded.email);
+    setUser(u);
+  };
+  useEffect(() => {
+    fetchUsers();
+    findUser();
+  }, []);
 
+  console.log(232323, user);
   function isNavSelected(string) {
     let url = window.location.href;
     if (url.includes(string)) {

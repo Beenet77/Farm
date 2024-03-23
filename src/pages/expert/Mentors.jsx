@@ -1,5 +1,3 @@
-// src/pages/Experts.js
-
 import React, { useState } from "react";
 import MentorCard from "../../components/MentorCard";
 import VideoCall from "../../components/VideoCall";
@@ -29,22 +27,20 @@ const mentorsData = [
 const Experts = () => {
   const [selectedMentor, setSelectedMentor] = useState(null);
   const [showVideoCall, setShowVideoCall] = useState(false);
-  const [showMessaging, setShowMessaging] = useState(false);
 
   const handleVideoCall = (mentor) => {
     setSelectedMentor(mentor);
     setShowVideoCall(true);
   };
 
-  const handleMessaging = (mentor) => {
-    setSelectedMentor(mentor);
-    setShowMessaging(true);
+  const handleMessaging = () => {
+    // Open messaging page in a new tab
+    window.open("http://localhost:8000/farmconnect/chat/", "_blank");
   };
 
   const handleClose = () => {
     setSelectedMentor(null);
     setShowVideoCall(false);
-    setShowMessaging(false);
   };
 
   return (
@@ -69,9 +65,6 @@ const Experts = () => {
       </div>
       {showVideoCall && (
         <VideoCall mentor={selectedMentor} onClose={handleClose} />
-      )}
-      {showMessaging && (
-        <Messaging mentor={selectedMentor} onClose={handleClose} />
       )}
     </div>
   );

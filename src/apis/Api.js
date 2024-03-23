@@ -9,4 +9,5 @@ export const FARM_URL = {
   govProduct: API_BASE_URL + "api/governmentproducts/",
   govProductCat: API_BASE_URL + "api/governmentproduct-category/",
   marketplaceCat: API_BASE_URL + "api/marketplaceproduct-category/",
+  orders: API_BASE_URL + "api/marketplace-product-orders/",
 };

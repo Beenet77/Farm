@@ -20,7 +20,7 @@ const Profile = () => {
   const fetchCat = async () => {
     try {
       const response = await axios.get(
-        "http://127.0.0.1:8000/api/product-category/"
+        "http://127.0.0.1:8000/api/marketplaceproduct-category/"
       );
       setCatOptions(
         response.data.map((el) => {
@@ -45,7 +45,7 @@ const Profile = () => {
       case "ORDERS":
         return <Orders />;
       default:
-        return <MyProducts />;
+        return <MyProducts catOptions={catOptions} />;
     }
   }
 

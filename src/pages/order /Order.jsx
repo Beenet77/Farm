@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import axios from "axios";
+import { jwtDecode } from "jwt-decode";
+import React, { useEffect, useState } from "react";
+import storage from "../../storage";
 
 const Order = () => {
   const [cartData] = useState(
@@ -10,6 +13,8 @@ const Order = () => {
     paymentOption: "",
   });
 
+  console.log("form", formData.deliveryLocation);
+
   const [confirmed, setConfirmed] = useState(false);
 
   const handleChange = (e) => {
@@ -20,16 +25,73 @@ const Order = () => {
     });
   };
 
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   setConfirmed(true);
+  // };
   const handleSubmit = (e) => {
     e.preventDefault();
-    setConfirmed(true);
+    if (formData.paymentOption) {
+      redirectToPaymentURL(formData.paymentOption);
+    } else {
+      setConfirmed(true);
+    }
+  };
+
+  const token = storage.getToken();
+
+  const decoded = jwtDecode(token);
+
+  // http://127.0.0.1:8000/api/marketplace-product-orders/
+
+  const redirectToPaymentURL = (paymentOption) => {
+    switch (paymentOption) {
+      case "cod":
+        window.location.href = "https://example.com/cod";
+        break;
+      case "card":
+        window.location.href = "https://example.com/card";
+        break;
+      case "online":
+        window.location.href = "https://example.com/online";
+        break;
+      default:
+        break;
+    }
   };
 
   const paymentOptionImages = {
     cod: "https://esewa.com.np/https://cdn.iconscout.com/icon/free/png-256/free-cash-on-delivery-1851649-1569374.png?f=webp/esewa_epay_logo.png",
-    card: "https://example.com/card.png", // Replace with actual image URL
+    card: "https://esewa.com.np/https://cdn.iconscout.com/icon/free/png-256/free-cash-on-delivery-1851649-1569374.png?f=webp/esewa_epay_logo.png",
     online: "https://example.com/online.png", // Replace with actual image URL
   };
+
+  let a = cartData.map((el) => {
+    return {
+      user: decoded.user_id,
+      product: el.id,
+      quantity: el.quantity,
+      address: formData.deliveryLocation,
+      total_price: el.quantity * +el.price,
+    };
+  });
+
+  let final = {
+    orders: a,
+  };
+  console.log("final", final);
+
+  const handleSubmitOrder = async () => {
+    await axios
+      .post(`http://127.0.0.1:8000/api/marketplace-product-orders/`, final)
+      .then(function (final) {
+        console.log(final);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+  console.log("cartdata", cartData);
 
   return (
     <div className="p-4 min-h-[85vh] container mx-auto mt-4">
@@ -110,13 +172,14 @@ const Order = () => {
               className="border border-gray-300 rounded-md px-2 py-1 w-full"
               required
             >
-              <option value="">Select Payment Option</option>
+              {/* <option value="">Select Payment Option</option> */}
               <option value="cod">Cash on Delivery</option>
-              <option value="card">Credit/Debit Card</option>
-              <option value="online">Online Payment</option>
+              <option value="card">Khalti</option>
+              <option value="online">Esewa</option>
             </select>
           </div>
           <button
+            onClick={handleSubmitOrder}
             type="submit"
             className="bg-primary text-black px-4 py-2 rounded-md mt-6"
           >
@@ -154,3 +217,37 @@ const Order = () => {
 };
 
 export default Order;
+
+// {
+//   "orders": [
+//     {
+//       "user": 1,
+//       "product": 1,
+//       "quantity": 2,
+//       "total_price": 20.00,
+//       "status": "Pending"
+//     },
+//     {
+//       "user": 2,
+//       "product": 3,
+//       "quantity": 1,
+//       "total_price": 15.00,
+//       "status": "Pending"
+//     },
+//     ...
+//   ]
+// }
+
+// let a = Array.map((el)=> {
+//   return {
+//     user: 3,
+//     product: el.uuid,
+//     quanity: el.quanity,
+//     address: address,
+//     total_price: el.quanity *  el.price,
+//   }
+// })
+
+// let final = {
+//   "orders" : a
+// }

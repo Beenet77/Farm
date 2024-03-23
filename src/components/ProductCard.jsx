@@ -1,7 +1,7 @@
 import React from "react";
 
 export default function ProductCard({ products, ...props }) {
-  console.log(products);
+
   function truncate(str, maxlength) {
     return str.length > maxlength ? str.slice(0, maxlength - 1) + "…" : str;
   }
