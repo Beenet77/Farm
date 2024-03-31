@@ -63,7 +63,7 @@ const Navbar = () => {
                   "home"
                 )} rounded-md ease-in duration-100 hover:text-white px-1 py-1`}
               >
-                Home
+                Government Products
               </li>
             </Link>
 

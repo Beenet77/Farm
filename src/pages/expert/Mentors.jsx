@@ -35,7 +35,7 @@ const Experts = () => {
 
   const handleMessaging = () => {
     // Open messaging page in a new tab
-    window.open("http://localhost:8000/farmconnect/chat/", "_blank");
+    window.open("http://127.0.0.1:8888/", "_blank");
   };
 
   const handleClose = () => {

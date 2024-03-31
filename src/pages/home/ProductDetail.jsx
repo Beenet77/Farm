@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import axios from "axios";
 import ButtonPrimary from "../../components/ButtonPrimary";
 import { HiSpeakerWave } from "react-icons/hi2"; // Import speak icon
@@ -8,6 +8,7 @@ import { HiSpeakerWave } from "react-icons/hi2"; // Import speak icon
 const ProductDetail = () => {
   const [detail, setDetail] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState([]);
+  const [productId, setProductId] = useState();
   const [recommendedProducts, setRecommendedProducts] = useState([]);
   const params = useParams();
   const synth = window.speechSynthesis;
@@ -38,6 +39,9 @@ const ProductDetail = () => {
       console.error("Error fetching product details:", error);
     }
   };
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const marketplaceParam = searchParams.get("marketplace");
 
   useEffect(() => {
     getDetails(params);
@@ -48,12 +52,13 @@ const ProductDetail = () => {
   }, [detail]);
 
   useEffect(() => {
-    fetchRecommendedProducts();
-  }, []);
+    setProductId(marketplaceParam);
+    fetchRecommendedProducts(productId);
+  }, [marketplaceParam, productId]);
 
-  const fetchRecommendedProducts = async () => {
+  const fetchRecommendedProducts = async (id) => {
     try {
-      let myurl = "http://127.0.0.1:8000/api/recommended-products";
+      let myurl = `http://127.0.0.1:8000/recommendations/${id}`;
       const response = await axios.get(myurl);
       setRecommendedProducts(response.data);
     } catch (error) {
@@ -83,35 +88,35 @@ const ProductDetail = () => {
     }
   };
 
-  // const speak = async (audioUrl) => {
-  //   try {
-  //     // Fetch the audio file
-  //     const response = await axios.get(audioUrl, { responseType: "blob" });
-  //     const blob = new Blob([response.data], { type: "audio/mpeg" });
+  const speak = async (audioUrl) => {
+    try {
+      // Fetch the audio file
+      const response = await axios.get(audioUrl, { responseType: "blob" });
+      const blob = new Blob([response.data], { type: "audio/mp3" });
 
-  //     // Create an audio element
-  //     const audio = new Audio(URL.createObjectURL(blob));
+      // Create an audio element
+      const audio = new Audio(URL.createObjectURL(blob));
 
-  //     // Play the audio
-  //     audio.play();
-  //   } catch (error) {
-  //     console.error("Error playing audio:", error);
-  //   }
-  // };
-  const speak = (text) => {
-    if (synth.speaking) {
-      console.error("Already speaking...");
-      return;
+      // Play the audio
+      audio.play();
+    } catch (error) {
+      console.error("Error playing audio:", error);
     }
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.voice = synth
-      .getVoices()
-      .find(
-        (voice) =>
-          voice.name === "Microsoft Sagar Online (Natural) - Nepali (Nepal)"
-      );
-    synth.speak(utterance);
   };
+  // const speak = (text) => {
+  //   if (synth.speaking) {
+  //     console.error("Already speaking...");
+  //     return;
+  //   }
+  //   const utterance = new SpeechSynthesisUtterance(text);
+  //   utterance.voice = synth
+  //     .getVoices()
+  //     .find(
+  //       (voice) =>
+  //         voice.name === "Microsoft Sagar Online (Natural) - Nepali (Nepal)"
+  //     );
+  //   synth.speak(utterance);
+  // };
   // const { speak } = useSpeechSynthesis();
 
   const previousCartData = JSON.parse(localStorage.getItem("cartData")) || [];
@@ -130,6 +135,8 @@ const ProductDetail = () => {
       window.location.reload(true);
     }
   }
+  console.log(111, relatedProducts);
+  // const vari = "who the hell are you";
 
   return (
     <div className="min-h-[85vh] container mx-auto mt-4">
@@ -143,32 +150,32 @@ const ProductDetail = () => {
               {/* Additional product details */}
               <p style={{ color: "red" }}>
                 Rs.{detail?.price}
-                <HiSpeakerWave
+                {/* <HiSpeakerWave
                   className="ml-2 cursor-pointer size-8"
                   onClick={() => speak(`मुल्य  ${detail?.price}`)}
-                />
+                /> */}
               </p>
               <h1 className="">
                 {detail?.name}
-                <HiSpeakerWave
+                {/* <HiSpeakerWave
                   className="ml-2 cursor-pointer size-8"
                   onClick={() => speak(`नाम ${detail?.name}`)}
-                />
-                {/* <HiSpeakerWave
+                /> */}
+                <HiSpeakerWave
                   className="ml-2 cursor-pointer size-8"
                   onClick={() =>
                     speak(
                       `http://127.0.0.1:8000/media/product_audio/${detail?.id}_ne.mp3`
                     )
                   }
-                /> */}
+                />
               </h1>
               <p>
                 {detail?.description}
-                <HiSpeakerWave
+                {/* <HiSpeakerWave
                   className="ml-2 cursor-pointer size-8"
                   onClick={() => speak(`विवरण ${detail?.description}`)}
-                />
+                /> */}
               </p>
               <ButtonPrimary
                 text="Add to Cart"
@@ -223,10 +230,11 @@ const ProductDetail = () => {
                     getUrlParamName() ? "?marketplace=" : "?government="
                   }${product.id}`}
                   className="group block overflow-hidden"
+                  onClick={() => setProductId(product.id)}
                 >
                   <img
-                    src={product?.image}
-                    alt={product.title}
+                    src={`http://127.0.0.1:8000${product?.image}`}
+                    alt={product.name}
                     className="w-full h-[230px] object-cover transition duration-500 group-hover:scale-105 sm:w-[455px]"
                   />
                   <div className="relative bg-white pt-3">

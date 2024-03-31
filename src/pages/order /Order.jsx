@@ -49,11 +49,11 @@ const Order = () => {
       case "cod":
         window.location.href = "https://example.com/cod";
         break;
-      case "card":
+      case "esewa":
         window.location.href = "https://example.com/card";
         break;
-      case "online":
-        window.location.href = "https://example.com/online";
+      case "khalti":
+        window.location.href = "https://khalti.com/";
         break;
       default:
         break;
@@ -174,8 +174,8 @@ const Order = () => {
             >
               {/* <option value="">Select Payment Option</option> */}
               <option value="cod">Cash on Delivery</option>
-              <option value="card">Khalti</option>
-              <option value="online">Esewa</option>
+              <option value="khati">Khalti</option>
+              <option value="esewa">Esewa</option>
             </select>
           </div>
           <button
